@@ -180,7 +180,7 @@ void CDialogAndHashingDlg::OnBnClickedOk()
 
 			CString timeDuration(std::to_string(diffMs).c_str());
 			
-			CString hashRate(std::to_string(i / diffMs).c_str());
+			CString hashRate(std::to_string((i / diffMs)/1000).c_str());
 			
 			CString finalHash(hash.c_str());
 
