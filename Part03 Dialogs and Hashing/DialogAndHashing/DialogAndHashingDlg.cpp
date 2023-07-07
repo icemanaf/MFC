@@ -176,7 +176,7 @@ void CDialogAndHashingDlg::OnBnClickedOk()
 
 			clock_t timeDiff = endTime - startTime;
 
-			float diffMs = timeDiff / CLOCKS_PER_SEC;
+			float diffMs = ((float)timeDiff) / CLOCKS_PER_SEC;
 
 			CString timeDuration(std::to_string(diffMs).c_str());
 			
