@@ -3,7 +3,7 @@
 //
 
 #pragma once
-#include "OutputWnd.h"
+
 
 class CMainFrame : public CFrameWnd
 {
@@ -32,7 +32,7 @@ public:
 
 protected:  // control bar embedded members
 	CStatusBar        m_wndStatusBar;
-	COutputWnd        m_wndOutput;
+	
 
 // Generated message map functions
 protected:

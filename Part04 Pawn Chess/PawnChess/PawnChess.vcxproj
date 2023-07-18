@@ -185,7 +185,6 @@
   <ItemGroup>
     <ClInclude Include="framework.h" />
     <ClInclude Include="MainFrm.h" />
-    <ClInclude Include="OutputWnd.h" />
     <ClInclude Include="PawnChess.h" />
     <ClInclude Include="PawnChessDoc.h" />
     <ClInclude Include="PawnChessView.h" />
@@ -195,7 +194,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MainFrm.cpp" />
-    <ClCompile Include="OutputWnd.cpp" />
     <ClCompile Include="PawnChess.cpp" />
     <ClCompile Include="PawnChessDoc.cpp" />
     <ClCompile Include="PawnChessView.cpp" />
