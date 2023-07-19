@@ -32,12 +32,24 @@ public:
 	virtual void Dump(CDumpContext& dc) const;
 #endif
 
+private:
+	BOOL m_bDragging;
+	int m_xPos;
+	int m_yPos;
+
+
 protected:
 
 // Generated message map functions
 protected:
 	DECLARE_MESSAGE_MAP()
+public:
+	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
+	afx_msg void OnLButtonUp(UINT nFlags, CPoint point);
+	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
 };
+
+
 
 #ifndef _DEBUG  // debug version in PawnChessView.cpp
 inline CPawnChessDoc* CPawnChessView::GetDocument() const

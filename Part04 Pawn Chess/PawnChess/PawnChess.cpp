@@ -12,6 +12,12 @@
 #include "PawnChessDoc.h"
 #include "PawnChessView.h"
 
+
+#include <gdiplus.h>
+using namespace Gdiplus;
+#pragma comment(lib, "gdiplus.lib")
+
+
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
@@ -74,6 +80,9 @@ BOOL CPawnChessApp::InitInstance()
 
 
 	EnableTaskbarInteraction(FALSE);
+
+	//Initialize GDIPlus
+	GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, NULL);
 
 	// AfxInitRichEdit2() is required to use RichEdit control
 	// AfxInitRichEdit2();
@@ -140,6 +149,10 @@ protected:
 // Implementation
 protected:
 	DECLARE_MESSAGE_MAP()
+private:
+	GdiplusStartupInput gdiplusStartupInput;
+public:
+	ULONG_PTR gdiplusToken;
 };
 
 CAboutDlg::CAboutDlg() noexcept : CDialogEx(IDD_ABOUTBOX)
@@ -165,3 +178,13 @@ void CPawnChessApp::OnAppAbout()
 
 
 
+
+
+int CPawnChessApp::ExitInstance()
+{
+	// TODO: Add your specialized code here and/or call the base class
+
+	GdiplusShutdown(gdiplusToken);
+
+	return CWinApp::ExitInstance();
+}
