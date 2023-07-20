@@ -1,11 +1,11 @@
 #include <inttypes.h>
+#include <vector>
 
-struct ChessBoard
+typedef struct Board
 {
-	 uint64_t WhitePawns;
-
-	 uint64_t BlackPawns;
-};
+    uint64_t WhitePawns;
+    uint64_t BlackPawns;
+}   ChessBoard;
 
 
 enum MOVE_STATUS
@@ -15,3 +15,6 @@ enum MOVE_STATUS
     USER_WINS,
     SYSTEM_WINS
 };
+
+
+std::vector<uint64_t> GenerateMoves(ChessBoard currentPos, bool userToMove);
