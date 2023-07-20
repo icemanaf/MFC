@@ -85,7 +85,7 @@ void CPawnChessView::OnDraw(CDC* pdc)
 
 	g.DrawImage(&im, 500, 500, 200, 200);
 	
-
+	
 
 
 	return;
