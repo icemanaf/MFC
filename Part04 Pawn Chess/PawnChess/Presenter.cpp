@@ -18,9 +18,9 @@ Presenter::Presenter()
 
     m_BlackPawn = new Image(_T("bp.png"), TRUE);
 
-    m_UserIsWhite = false;
+    m_UserIsWhite = true;
 
-    ResetBoard();
+     ResetBoard();
 
 }
 
@@ -58,23 +58,23 @@ void Presenter::DisplayBoard(CDC* pdc,CRect clientRect)
 
             for (int col = 0;col < 6;col++)
             {
-
-                g.FillRectangle(&(colorToggle? *m_lightBrush:*m_darkBrush), col * sqWidth, row * sqHeight, sqWidth, sqHeight);
+                g.FillRectangle(&(colorToggle ? *m_lightBrush : *m_darkBrush), col * sqWidth, row * sqHeight, sqWidth, sqHeight);
+                
 
                 colorToggle = !colorToggle;
 
-                auto status = m_displayArray[col, row];
+                auto status = m_displayArray[5-row][col];
 
-                switch (*status) 
+                switch (status) 
                 {
                     case WHITE_PAWN:
                         g.DrawImage(m_WhitePawn, col * sqWidth + 20, row * sqHeight, sqWidth * m_ImageScaleFactor, sqHeight * m_ImageScaleFactor);
                         break;
 
                     case BLACK_PAWN:
-                        g.DrawImage(m_BlackPawn, col * sqWidth + 20, row * sqHeight, sqWidth * m_ImageScaleFactor, sqHeight * m_ImageScaleFactor);
+                        g.DrawImage(m_BlackPawn, col * sqWidth + 20, row  * sqHeight, sqWidth * m_ImageScaleFactor, sqHeight * m_ImageScaleFactor);
                         break;
-
+                   
                 }
             }
         }
@@ -111,7 +111,7 @@ void Presenter::ResetBoard()
     if (m_UserIsWhite)
     {
         m_displayArray[0][0] = WHITE_PAWN;
-        m_displayArray[0][1] = WHITE_PAWN;
+        m_displayArray[0][1] = BLACK_PAWN;
         m_displayArray[0][2] = WHITE_PAWN;
         m_displayArray[0][3] = WHITE_PAWN;
         m_displayArray[0][4] = WHITE_PAWN;
@@ -122,7 +122,7 @@ void Presenter::ResetBoard()
         m_displayArray[5][2] = BLACK_PAWN;
         m_displayArray[5][3] = BLACK_PAWN;
         m_displayArray[5][4] = BLACK_PAWN;
-        m_displayArray[5][5] = BLACK_PAWN;
+        m_displayArray[5][5] = WHITE_PAWN;
     }
     else
     {
