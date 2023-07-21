@@ -2,7 +2,7 @@
 #include "Presenter.h"
 
 
-
+//constructor
 Presenter::Presenter()
 {
 
@@ -18,8 +18,14 @@ Presenter::Presenter()
 
     m_BlackPawn = new Image(_T("bp.png"), TRUE);
 
+    m_UserIsWhite = false;
+
+    ResetBoard();
+
 }
 
+
+//destructor
 Presenter::~Presenter()
 {
     delete m_lightBrush;
@@ -57,36 +63,21 @@ void Presenter::DisplayBoard(CDC* pdc,CRect clientRect)
 
                 colorToggle = !colorToggle;
 
+                auto status = m_displayArray[col, row];
 
-            /*    g.FillRectangle()
+                switch (*status) 
+                {
+                    case WHITE_PAWN:
+                        g.DrawImage(m_WhitePawn, col * sqWidth + 20, row * sqHeight, sqWidth * m_ImageScaleFactor, sqHeight * m_ImageScaleFactor);
+                        break;
 
-                CPoint point(col * sqWidth, row * sqHeight);
+                    case BLACK_PAWN:
+                        g.DrawImage(m_BlackPawn, col * sqWidth + 20, row * sqHeight, sqWidth * m_ImageScaleFactor, sqHeight * m_ImageScaleFactor);
+                        break;
 
-                colorToggle = !colorToggle;
-
-                CRect rect(point, size); 
-
-                CBrush brush(colorToggle?lightSquareColor:darkSquareColor);  
-
-                pdc->FillRect(&rect, &brush);*/
-
-                
+                }
             }
         }
-
-
-
-
-    //Graphics g(*pdc);
-    //Pen      pen(Color(255, 0, 0, 255), 3.0);
-    //g.DrawLine(&pen, 0, 0, 1000, 1000);
-
-
-    ////Image im(_T("bp.png"), TRUE);
-
-
-    //g.DrawImage(&im, 500, 500, 200, 200);
-
 
 }
 
@@ -117,7 +108,7 @@ void Presenter::ResetBoard()
     }
 
     //the human player starts from the bottom row , so set the white there
-    if (m_WhiteIsUser)
+    if (m_UserIsWhite)
     {
         m_displayArray[0][0] = WHITE_PAWN;
         m_displayArray[0][1] = WHITE_PAWN;
