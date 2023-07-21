@@ -3,8 +3,8 @@
 
 typedef struct Board
 {
-    uint64_t WhitePawns;
-    uint64_t BlackPawns;
+    uint64_t WhitePawns; // Formerly UserPawns
+    uint64_t BlackPawns; // Formerly SystemPawns
 }   ChessBoard;
 
 
@@ -16,5 +16,16 @@ enum MOVE_STATUS
     SYSTEM_WINS
 };
 
+
+static class PawnChessEngine
+{
+public:
+    //const int32_t INFINITY = 2147483647;
+    static ChessBoard ReplyMove;
+
+    static bool IsPositionLegal(ChessBoard currentPos);
+
+
+};
 
 std::vector<uint64_t> GenerateMoves(ChessBoard currentPos, bool userToMove);
