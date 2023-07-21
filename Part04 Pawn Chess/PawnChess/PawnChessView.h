@@ -3,6 +3,7 @@
 //
 
 #pragma once
+#include "Presenter.h"
 
 
 class CPawnChessView : public CView
@@ -36,6 +37,7 @@ private:
 	BOOL m_bDragging;
 	int m_xPos;
 	int m_yPos;
+	Presenter m_Presenter;
 
 
 protected:
