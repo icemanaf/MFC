@@ -194,6 +194,7 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ChessEngine.cpp" />
     <ClCompile Include="MainFrm.cpp" />
     <ClCompile Include="PawnChess.cpp" />
     <ClCompile Include="PawnChessDoc.cpp" />
