@@ -19,6 +19,20 @@ namespace PawnChessTests
 			Assert::AreNotEqual(s, s2);
 		}
 
+		TEST_METHOD(GenerateMoves_StartingPosition_SizeSix)
+		{
+			const uint64_t RANK_6_MASK = 0xFC0000000;
+			const uint64_t RANK_1_MASK = 0x3f;
+			ChessBoard starting;
+			starting.BlackPawns = RANK_6_MASK;
+			starting.WhitePawns = RANK_1_MASK;
+
+			// TODO: The bool is always undefined?
+			std::vector<ChessBoard> moves = PawnChessEngine::GenerateMoves(starting, true);
+
+			Assert::AreEqual(6, static_cast<int>(moves.size()));
+		}
+
 		TEST_METHOD(IsPositionLegal_StartingPosition_True)
 		{
 			const uint64_t RANK_6_MASK = 0xFC0000000;
