@@ -4,6 +4,8 @@
 using namespace Gdiplus;
 #pragma comment (lib,"Gdiplus.lib")
 
+#define ROWS 6
+#define COLS 6
 
 enum CHESS_SQUARE
 {
@@ -18,7 +20,7 @@ class Presenter
 {
 private:
 	
-	CHESS_SQUARE m_displayArray[6][6]= {
+	CHESS_SQUARE m_displayArray[ROWS][COLS]= {
 		{EMPTY,EMPTY,EMPTY,EMPTY,EMPTY},
 		{EMPTY,EMPTY,EMPTY,EMPTY,EMPTY},
 		{EMPTY,EMPTY,EMPTY,EMPTY,EMPTY},
@@ -31,9 +33,11 @@ private:
 
 	SolidBrush* m_lightBrush;
 	SolidBrush* m_darkBrush;
-	Image* m_BlackPawn;
-	Image* m_WhitePawn;
+	Bitmap* m_BlackPawn;
+	Bitmap* m_WhitePawn;
 	const double m_ImageScaleFactor = 0.75;
+	int m_chessSquareHeight = 0;
+	int m_chessSquareWidth = 0;
 	
 public:
 
@@ -44,11 +48,13 @@ public:
 
 	void DisplayBoard(CDC* pdc,CRect clientRect);
 
-	int GetSelectedSquare(int xMousePos, int  yMousePos);
+	std::tuple<int, int> GetSelectedSquare(int xMousePos, int  yMousePos);
 
 	MOVE_STATUS Move(int startSquare, int targetSquare);
 
-	std::vector<int> ConvertToArray(ChessBoard board);
+	CHESS_SQUARE GetItemAtPos(int row, int col);
+
+	void SetItemAtPos(int row,int col,CHESS_SQUARE item);
 
 	ChessBoard ConvertFromArray(std::vector<int> boardArray);
 
