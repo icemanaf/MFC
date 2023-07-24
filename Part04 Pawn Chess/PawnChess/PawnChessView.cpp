@@ -168,7 +168,7 @@ void CPawnChessView::OnLButtonUp(UINT nFlags, CPoint point)
 		 {
 			 //do minmax here
 
-			const int depthToSearch = 12;
+			const int depthToSearch = 14;
 
 			PawnChessEngine::MinMaxEx(current_pos, false, depthToSearch, depthToSearch, -INFINITY32, INFINITY32, PawnChessEngine::EvaluatePosition);
 			
