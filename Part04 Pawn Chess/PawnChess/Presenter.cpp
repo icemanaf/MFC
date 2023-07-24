@@ -1,11 +1,11 @@
 #include "pch.h"
 #include "Presenter.h"
-
+#include <tuple>
 
 //constructor
 Presenter::Presenter()
 {
-
+    //set the chess square colors
     Color darkSquare(100, 100, 100);
 
     Color lightSquare(200, 200, 200);
@@ -14,9 +14,9 @@ Presenter::Presenter()
 
     m_darkBrush = new SolidBrush(darkSquare);
 
-    m_WhitePawn = new Image(_T("wp.png"), TRUE);
+    m_WhitePawn = new Bitmap(_T("wp.png"), FALSE);
 
-    m_BlackPawn = new Image(_T("bp.png"), TRUE);
+    m_BlackPawn = new Bitmap(_T("bp.png"), FALSE);
 
     m_UserIsWhite = true;
 
@@ -42,25 +42,32 @@ void Presenter::DisplayBoard(CDC* pdc,CRect clientRect)
 
     Graphics g(*pdc);
 
+    g.SetCompositingMode(CompositingModeSourceOver);
+    g.SetCompositingQuality(CompositingQualityHighSpeed);
+    g.SetPixelOffsetMode(PixelOffsetModeHighSpeed);
+    g.SetSmoothingMode(SmoothingModeHighSpeed);
+    g.SetInterpolationMode(InterpolationModeHighQuality);
+   
+   
+  
 
-    int sqHeight = clientRect.Height() / 6;
+    m_chessSquareHeight = clientRect.Height() / ROWS;
 
-    int sqWidth = clientRect.Width() /6;
+    m_chessSquareWidth = clientRect.Width() /COLS;
 
-    CSize size(sqWidth, sqHeight);
+    CSize size(m_chessSquareWidth, m_chessSquareHeight);
 
     bool colorToggle = false;
     
 
-        for (int row = 0;row < 6;row++)
+        for (int row = 0;row < ROWS;row++)
         {
             colorToggle = !colorToggle;
 
-            for (int col = 0;col < 6;col++)
+            for (int col = 0;col < COLS;col++)
             {
-                g.FillRectangle(&(colorToggle ? *m_lightBrush : *m_darkBrush), col * sqWidth, row * sqHeight, sqWidth, sqHeight);
+                g.FillRectangle(&(colorToggle ? *m_lightBrush : *m_darkBrush), col * m_chessSquareWidth, row * m_chessSquareHeight, m_chessSquareWidth, m_chessSquareHeight);
                 
-
                 colorToggle = !colorToggle;
 
                 auto status = m_displayArray[5-row][col];
@@ -68,11 +75,11 @@ void Presenter::DisplayBoard(CDC* pdc,CRect clientRect)
                 switch (status) 
                 {
                     case WHITE_PAWN:
-                        g.DrawImage(m_WhitePawn, col * sqWidth + 20, row * sqHeight, sqWidth * m_ImageScaleFactor, sqHeight * m_ImageScaleFactor);
+                        g.DrawImage(m_WhitePawn, col * m_chessSquareWidth + 20, row * m_chessSquareHeight, m_chessSquareWidth * m_ImageScaleFactor, m_chessSquareHeight * m_ImageScaleFactor);
                         break;
 
                     case BLACK_PAWN:
-                        g.DrawImage(m_BlackPawn, col * sqWidth + 20, row  * sqHeight, sqWidth * m_ImageScaleFactor, sqHeight * m_ImageScaleFactor);
+                        g.DrawImage(m_BlackPawn, col * m_chessSquareWidth + 20, row  * m_chessSquareHeight, m_chessSquareWidth * m_ImageScaleFactor, m_chessSquareHeight * m_ImageScaleFactor);
                         break;
                    
                 }
@@ -81,15 +88,32 @@ void Presenter::DisplayBoard(CDC* pdc,CRect clientRect)
 
 }
 
-int Presenter::GetSelectedSquare(int xMousePos, int yMousePos)
+//returns the square in row col format referenced to the 2d display array
+std::tuple<int,int> Presenter::GetSelectedSquare(int xMousePos, int yMousePos)
 {
-    return 0;
+   
+    int row = (m_chessSquareHeight*ROWS -  yMousePos) / m_chessSquareHeight;
+
+    int col = xMousePos/ m_chessSquareWidth ;
+
+    return std::make_tuple(row, col);
 }
 
 MOVE_STATUS Presenter::Move(int startSquare, int targetSquare)
 {
     return MOVE_STATUS();
 }
+
+CHESS_SQUARE Presenter::GetItemAtPos(int row, int col)
+{
+    return m_displayArray[row][col];
+}
+
+void Presenter::SetItemAtPos(int row, int col, CHESS_SQUARE item)
+{
+    m_displayArray[row][col] = item;
+}
+
 
 ChessBoard Presenter::ConvertFromArray(std::vector<int> boardArray)
 {
@@ -99,9 +123,9 @@ ChessBoard Presenter::ConvertFromArray(std::vector<int> boardArray)
 void Presenter::ResetBoard()
 {
     //clear the board first
-    for (int row = 0; row < 6;row++)
+    for (int row = 0; row < ROWS;row++)
     {
-        for (int col = 0;col < 6;col++)
+        for (int col = 0;col < COLS;col++)
         {
             m_displayArray[row][col] = EMPTY;
         }

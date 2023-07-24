@@ -4,6 +4,7 @@
 
 #pragma once
 #include "Presenter.h"
+#include <tuple>
 
 
 class CPawnChessView : public CView
@@ -34,10 +35,12 @@ public:
 #endif
 
 private:
+	Presenter m_Presenter;
 	BOOL m_bDragging;
 	int m_xPos;
 	int m_yPos;
-	Presenter m_Presenter;
+	std::tuple<int,int> m_userSelStartSquare;
+	std::tuple<int, int> m_userSelEndSquare;
 
 
 protected:

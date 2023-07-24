@@ -14,6 +14,7 @@
 #include "PawnChessView.h"
 
 #include <gdiplus.h>
+#include <tuple>
 using namespace Gdiplus;
 #pragma comment (lib,"Gdiplus.lib")
 
@@ -42,10 +43,12 @@ CPawnChessView::CPawnChessView() noexcept
 	 m_xPos=0;
 	 m_yPos=0;
 
+
 }
 
 CPawnChessView::~CPawnChessView()
 {
+	
 }
 
 BOOL CPawnChessView::PreCreateWindow(CREATESTRUCT& cs)
@@ -66,10 +69,8 @@ void CPawnChessView::OnDraw(CDC* pdc)
 	CRect client;
 	GetClientRect(&client);
 
-
 	m_Presenter.DisplayBoard(pdc,client);
 
-	
 	return;
 
 	CPawnChessDoc* pDoc = GetDocument();
@@ -114,6 +115,13 @@ void CPawnChessView::OnLButtonDown(UINT nFlags, CPoint point)
 	SetCapture();
 	SetCursor(::LoadCursor(NULL, IDC_HAND));
 
+	CPoint mousePos;
+
+	GetCursorPos(&mousePos);
+
+	ScreenToClient(&mousePos);
+
+	 m_userSelStartSquare= m_Presenter.GetSelectedSquare(mousePos.x, mousePos.y);
 
 	CView::OnLButtonDown(nFlags, point);
 }
@@ -123,13 +131,29 @@ void CPawnChessView::OnLButtonUp(UINT nFlags, CPoint point)
 {
 	// TODO: Add your message handler code here and/or call default
 
+	CPoint mousePos;
+
+	GetCursorPos(&mousePos);
+
+	ScreenToClient(&mousePos);
+
+	 m_userSelEndSquare = m_Presenter.GetSelectedSquare(mousePos.x, mousePos.y);
 	
-	
+	 if (m_userSelEndSquare != m_userSelStartSquare)
+	 {
+		 auto item = m_Presenter.GetItemAtPos(std::get<0>(m_userSelStartSquare), std::get<1>(m_userSelStartSquare));
+
+		 m_Presenter.SetItemAtPos(std::get<0>(m_userSelStartSquare), std::get<1>(m_userSelStartSquare), EMPTY);
+
+		 m_Presenter.SetItemAtPos(std::get<0>(m_userSelEndSquare), std::get<1>(m_userSelEndSquare),item);
+	 }
+
 
 	m_bDragging = FALSE;
 	ReleaseCapture();
+	Invalidate();
 
-
+	
 
 	CView::OnLButtonUp(nFlags, point);
 }
@@ -146,11 +170,7 @@ void CPawnChessView::OnMouseMove(UINT nFlags, CPoint point)
 		GetCursorPos(&mousePos);
 
 		ScreenToClient(&mousePos);
-
-		m_xPos = mousePos.x;
-		m_yPos = mousePos.y;
-
-		Invalidate();
+		
 	}
 
 
