@@ -25,6 +25,7 @@ const int16_t PAWN_VALUE = 10000;
 // TODO: This how to do delegates?
 //public delegate int Evaluate(ChessBoard currentPos, bool UserToMove);
 
+ChessBoard PawnChessEngine::ReplyMove;
 
 std::vector<ChessBoard> PawnChessEngine::GenerateMoves(ChessBoard currentPos, bool userToMove)
 {

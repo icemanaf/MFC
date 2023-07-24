@@ -18,6 +18,7 @@
 using namespace Gdiplus;
 #pragma comment (lib,"Gdiplus.lib")
 
+
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
@@ -159,13 +160,19 @@ void CPawnChessView::OnLButtonUp(UINT nFlags, CPoint point)
 
 			 //revert
 			 m_Presenter.SetBoard(prev_pos);
-
+			 m_bDragging = FALSE;
 			 return;
 
 		 }
 		 else
 		 {
 			 //do minmax here
+
+			const int depthToSearch = 12;
+
+			PawnChessEngine::MinMaxEx(current_pos, false, depthToSearch, depthToSearch, -INFINITY32, INFINITY32, PawnChessEngine::EvaluatePosition);
+			
+			m_Presenter.SetBoard(PawnChessEngine::ReplyMove);
 
 		 }
 

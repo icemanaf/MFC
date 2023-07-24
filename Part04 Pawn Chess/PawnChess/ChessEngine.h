@@ -17,7 +17,7 @@ enum MOVE_STATUS
 };
 
 const int32_t INFINITY32 = 2147483647; // INFINITY was taken
-static ChessBoard ReplyMove;
+
 
 class PawnChessEngine
 {
@@ -28,6 +28,8 @@ public:
     static int32_t EvaluatePosition(ChessBoard currentPos, bool userToMove);
     static int32_t MinMaxEx(ChessBoard currentPos, bool userToMove, int currentDepth, int depthToSearch, int alpha, int beta,
         int32_t (*evalFunction)(ChessBoard, bool));
+    static ChessBoard ReplyMove;
+  
 
 private:
     static uint64_t GetUserMovers(ChessBoard currentPos);
