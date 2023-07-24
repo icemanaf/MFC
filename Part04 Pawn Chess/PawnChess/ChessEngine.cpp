@@ -11,7 +11,7 @@
 //the first 36 squares ie bits 0-35
 const uint64_t BOARD_MASK = 0xFFFFFFFFF;// the bitboard of the relevant squares. only take in to consideration 
 
-//0000000000000000000000000000000000000000000000000000000000 111111 (the first rank)
+//0000000000000000000000000000000000000000000000000000000000111111 (the first rank)
 const uint64_t RANK_1_MASK = 0x3f;
 //0000000000000000000000000000000000000000000000000000111111000000 (the second rank)
 const uint64_t RANK_2_MASK = 0xFC0;
@@ -329,9 +329,20 @@ bool PawnChessEngine::IsPositionLegal(ChessBoard currentPos)
     return (currentPos.BlackPawns & currentPos.WhitePawns & BOARD_MASK) == 0 ? true : false;
 }
 
-//todo 
-
-std::vector<uint64_t> GenerateMoves(ChessBoard currentPos, bool userToMove)
+bool PawnChessEngine::ValidateMove(ChessBoard currentPos, ChessBoard moveAfterPos, bool userToMove)
 {
-	return std::vector<uint64_t>();
+    /*if this returns false then then the move is illegal*/
+    bool Bret = false;
+    std::vector<ChessBoard> possibleMovesFromPos = GenerateMoves(currentPos, userToMove);
+
+    for (int i = 0; i < possibleMovesFromPos.size(); i++)
+    {
+        if ((moveAfterPos.WhitePawns == possibleMovesFromPos[i].WhitePawns) && (moveAfterPos.BlackPawns == possibleMovesFromPos[i].BlackPawns))
+        {
+            Bret = true;
+            break;
+        }
+    }
+
+    return Bret;
 }

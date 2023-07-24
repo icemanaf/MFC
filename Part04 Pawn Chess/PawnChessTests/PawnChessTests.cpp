@@ -73,6 +73,55 @@ namespace PawnChessTests
 			Assert::IsFalse(result2);
 		}
 
+		TEST_METHOD(ValidateMove_NotMoved_False)
+		{
+			const uint64_t RANK_6_MASK = 0xFC0000000;
+			const uint64_t RANK_1_MASK = 0x3f;
+			ChessBoard starting;
+			starting.BlackPawns = RANK_6_MASK;
+			starting.WhitePawns = RANK_1_MASK;
+
+			bool valid = PawnChessEngine::ValidateMove(starting, starting, true);
+
+			Assert::IsFalse(valid);
+		}
+
+		TEST_METHOD(ValidateMove_Moved_True)
+		{
+			const uint64_t RANK_6_MASK = 0xFC0000000;
+			const uint64_t RANK_1_MASK = 0x3f;
+			ChessBoard starting;
+			starting.BlackPawns = RANK_6_MASK;
+			starting.WhitePawns = RANK_1_MASK;
+
+			ChessBoard ending;
+			ending.BlackPawns = RANK_6_MASK;
+			// 0000000000000000000000000000000000000000000000000000100000011111
+			ending.WhitePawns = 0x81f;
+
+			bool valid = PawnChessEngine::ValidateMove(starting, ending, true);
+
+			Assert::IsTrue(valid);
+		}
+
+		TEST_METHOD(ValidateMove_MovedTooFar_False)
+		{
+			const uint64_t RANK_6_MASK = 0xFC0000000;
+			const uint64_t RANK_1_MASK = 0x3f;
+			ChessBoard starting;
+			starting.BlackPawns = RANK_6_MASK;
+			starting.WhitePawns = RANK_1_MASK;
+
+			ChessBoard ending;
+			ending.BlackPawns = RANK_6_MASK;
+			// 0000000000000000000000000000000000000000000000100000000000011111
+			ending.WhitePawns = 0x2001f;
+
+			bool valid = PawnChessEngine::ValidateMove(starting, ending, true);
+
+			Assert::IsFalse(valid);
+		}
+
 	//private:
 	//	ChessBoard array2dToBitboard(int board[][4])
 	//	{

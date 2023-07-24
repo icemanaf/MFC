@@ -25,6 +25,7 @@ public:
 
     static std::vector<ChessBoard> GenerateMoves(ChessBoard currentPos, bool userToMove);
     static bool IsPositionLegal(ChessBoard currentPos);
+    static bool ValidateMove(ChessBoard currentPos, ChessBoard moveAfterPos, bool userToMove);
 
 private:
     static uint64_t GetUserMovers(ChessBoard currentPos);
