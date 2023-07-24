@@ -118,21 +118,69 @@ void Presenter::SetItemAtPos(int row, int col, CHESS_SQUARE item)
 
 void Presenter::SetBoard(ChessBoard board)
 {
+    int row = 0;
+    int col = 0;
+    uint64_t bitCounter = 0x01;
+
+
+    for (int i = 0;i < (ROWS * COLS); i++)
+    {
+        m_displayArray[row][col] = EMPTY;
+
+        if ((bitCounter & board.UserPawns) != 0)
+        {
+            m_displayArray[row][col] = USER_PAWN;
+        }
+
+        if ((bitCounter & board.SystemPawns) != 0)
+        {
+            m_displayArray[row][col] = SYSTEM_PAWN;
+        }
+
+        col++;
+
+        bitCounter = bitCounter << 1;
+
+        if (col >= COLS)
+        {
+            col = 0;
+            row++;
+        }
+    }
+
+}
+
+bool Presenter::ValidateMove(ChessBoard now, ChessBoard proposed)
+{
+    return PawnChessEngine::ValidateMove(now, proposed,true);
 }
 
 ChessBoard Presenter::GetBoard()
 {
-    ChessBoard ret;
+    ChessBoard ret{};
+
+    uint64_t bitCounter = 0x01;
+    
 
     for (int row = 0; row < ROWS;row++)
     {
         for(int col=0 ; col<COLS; col++)
         {
+            if (m_displayArray[row][col] == SYSTEM_PAWN)
+            {
+                ret.SystemPawns = ret.SystemPawns | bitCounter;
+            }
+            else if (m_displayArray[row][col] == USER_PAWN)
+            {
+                ret.UserPawns = ret.UserPawns | bitCounter;
+            }
+
+            bitCounter = bitCounter << 1;
         }
     }
          
 
-    return ChessBoard();
+    return ret;
 }
 
 
@@ -151,7 +199,7 @@ void Presenter::ResetBoard()
     //the human player starts from the bottom row , so set the white there
   
         m_displayArray[0][0] = USER_PAWN;
-        m_displayArray[0][1] = SYSTEM_PAWN;
+        m_displayArray[0][1] = USER_PAWN;
         m_displayArray[0][2] = USER_PAWN;
         m_displayArray[0][3] = USER_PAWN;
         m_displayArray[0][4] = USER_PAWN;
@@ -162,7 +210,7 @@ void Presenter::ResetBoard()
         m_displayArray[5][2] = SYSTEM_PAWN;
         m_displayArray[5][3] = SYSTEM_PAWN;
         m_displayArray[5][4] = SYSTEM_PAWN;
-        m_displayArray[5][5] = USER_PAWN;
+        m_displayArray[5][5] = SYSTEM_PAWN;
    
 
 }

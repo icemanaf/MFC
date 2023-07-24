@@ -57,6 +57,8 @@ public:
 
 	void SetBoard(ChessBoard board);
 
+	bool ValidateMove(ChessBoard prev, ChessBoard now);
+
 	ChessBoard GetBoard();
 
 	void ResetBoard();

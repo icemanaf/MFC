@@ -143,9 +143,32 @@ void CPawnChessView::OnLButtonUp(UINT nFlags, CPoint point)
 	 {
 		 auto item = m_Presenter.GetItemAtPos(std::get<0>(m_userSelStartSquare), std::get<1>(m_userSelStartSquare));
 
+		 auto prev_pos = m_Presenter.GetBoard();
+
 		 m_Presenter.SetItemAtPos(std::get<0>(m_userSelStartSquare), std::get<1>(m_userSelStartSquare), EMPTY);
 
 		 m_Presenter.SetItemAtPos(std::get<0>(m_userSelEndSquare), std::get<1>(m_userSelEndSquare),item);
+
+		 auto current_pos = m_Presenter.GetBoard();
+
+
+		 if (!m_Presenter.ValidateMove(prev_pos, current_pos))
+		 {
+			 //illegal move ,
+			 CWnd::MessageBox(_T("Illegal move!"));
+
+			 //revert
+			 m_Presenter.SetBoard(prev_pos);
+
+			 return;
+
+		 }
+		 else
+		 {
+			 //do minmax here
+
+		 }
+
 	 }
 
 
