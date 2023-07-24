@@ -16,16 +16,18 @@ enum MOVE_STATUS
     SYSTEM_WINS
 };
 
+const int32_t INFINITY32 = 2147483647; // INFINITY was taken
+static ChessBoard ReplyMove;
 
 class PawnChessEngine
 {
 public:
-    //const int32_t INFINITY = 2147483647;
-    static ChessBoard ReplyMove;
-
     static std::vector<ChessBoard> GenerateMoves(ChessBoard currentPos, bool userToMove);
     static bool IsPositionLegal(ChessBoard currentPos);
     static bool ValidateMove(ChessBoard currentPos, ChessBoard moveAfterPos, bool userToMove);
+    static int32_t EvaluatePosition(ChessBoard currentPos, bool userToMove);
+    static int32_t MinMaxEx(ChessBoard currentPos, bool userToMove, int currentDepth, int depthToSearch, int alpha, int beta,
+        int32_t (*evalFunction)(ChessBoard, bool));
 
 private:
     static uint64_t GetUserMovers(ChessBoard currentPos);
@@ -35,6 +37,7 @@ private:
     static uint64_t GetUserCapturesLeft(ChessBoard currentPos);
     static uint64_t GetSystemLeftCaptures(ChessBoard currentPos);
     static uint8_t GetNoOfSetBits(uint64_t bitBoard);
+    static int32_t EvaluatePositionEx(ChessBoard currentPos, bool userToMove);
 
 };
 
