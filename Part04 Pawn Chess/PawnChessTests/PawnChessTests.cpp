@@ -122,6 +122,22 @@ namespace PawnChessTests
 			Assert::IsFalse(valid);
 		}
 
+		TEST_METHOD(MinMaxEx_WhiteInRank6Win_Infinity)
+		{
+			const uint64_t RANK_6_MASK = 0xFC0000000;
+			const uint64_t RANK_5_MASK = 0x3F000000;
+			ChessBoard currentPos;
+			currentPos.BlackPawns = RANK_5_MASK;
+			currentPos.WhitePawns = RANK_6_MASK;
+
+			int depthToSearch = 11;
+
+			int32_t result = PawnChessEngine::MinMaxEx(currentPos, false, depthToSearch, depthToSearch,
+				-INFINITY32, INFINITY32, EvaluatePosition);
+
+			Assert::AreEqual(INFINITY32, result);
+		}
+
 	//private:
 	//	ChessBoard array2dToBitboard(int board[][4])
 	//	{

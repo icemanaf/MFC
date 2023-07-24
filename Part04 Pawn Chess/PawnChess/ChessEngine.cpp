@@ -346,3 +346,161 @@ bool PawnChessEngine::ValidateMove(ChessBoard currentPos, ChessBoard moveAfterPo
 
     return Bret;
 }
+
+MOVE_STATUS DetectWinLoss(ChessBoard currentPos, bool userToMove)
+{
+    // TODO:
+    return USER_WINS;
+}
+
+/* evaluation function
+ * Currently only checks material count*/
+int32_t EvaluatePosition(ChessBoard currentPos, bool userToMove)
+{
+    int32_t iRet = 0;
+    if (userToMove)
+    {
+        /*reward for mobility and captures*/
+       // iRet += (GetNoOfSetBits(GetUserMovers(currentPos)) * 5 + GetNoOfSetBits(GetUserCapturesLeft(currentPos)) * 10 + GetNoOfSetBits(GetUserCapturesRight(currentPos)) *10);
+
+
+        /* get the material count of the pawns*/
+        //iRet += (GetNoOfSetBits(GetUserMovers(currentPos)) - GetNoOfSetBits(GetSystemMovers(currentPos))) * 10;
+
+        iRet += (GetNoOfSetBits(currentPos.WhitePawns) - GetNoOfSetBits(currentPos.BlackPawns)) * PAWN_VALUE;
+    }
+    else
+    {
+        //iRet += (GetNoOfSetBits(GetSystemMovers(currentPos)) - GetNoOfSetBits(GetUserMovers(currentPos)) )* 10;
+        iRet += (GetNoOfSetBits(currentPos.BlackPawns) - GetNoOfSetBits(currentPos.WhitePawns)) * PAWN_VALUE;
+    }
+
+    return iRet;
+}
+
+int32_t EvaluatePositionEx(ChessBoard currentPos, bool userToMove)
+{
+    /*improved version of the eval used with minmaxEX
+     Evaluated from whites point of view;negate for black*/
+    int32_t iRet = 0;
+
+
+    /*reward for mobility*/
+    iRet += (GetNoOfSetBits(GetUserMovers(currentPos)) - GetNoOfSetBits(GetSystemMovers(currentPos))) * 100;
+
+    /* get the material count of the pawns*/
+    iRet += (GetNoOfSetBits(currentPos.WhitePawns) - GetNoOfSetBits(currentPos.BlackPawns)) * PAWN_VALUE;
+
+
+    /*position based scores for unblocked pieces*/
+    iRet += GetNoOfSetBits(((RANK_2_MASK & currentPos.WhitePawns) << 5) & (~(currentPos.BlackPawns & RANK_3_MASK))) * 5;
+    iRet += GetNoOfSetBits(((RANK_3_MASK & currentPos.WhitePawns) << 5) & (~(currentPos.BlackPawns & RANK_4_MASK))) * 10;
+    iRet += GetNoOfSetBits(((RANK_4_MASK & currentPos.WhitePawns) << 5) & (~(currentPos.BlackPawns & RANK_5_MASK))) * 2000;
+    iRet += GetNoOfSetBits(((RANK_5_MASK & currentPos.WhitePawns) << 5) & (~(currentPos.BlackPawns & RANK_6_MASK))) * 50000;
+
+    iRet += GetNoOfSetBits(((RANK_2_MASK & currentPos.BlackPawns) >> 5) & (~(currentPos.WhitePawns & RANK_1_MASK))) * -50000;
+    iRet += GetNoOfSetBits(((RANK_3_MASK & currentPos.BlackPawns) >> 5) & (~(currentPos.WhitePawns & RANK_2_MASK))) * -2000;
+    iRet += GetNoOfSetBits(((RANK_4_MASK & currentPos.WhitePawns) >> 5) & (~(currentPos.WhitePawns & RANK_3_MASK))) * -10;
+    iRet += GetNoOfSetBits(((RANK_5_MASK & currentPos.WhitePawns) >> 5) & (~(currentPos.WhitePawns & RANK_4_MASK))) * -5;
+
+
+    if (!userToMove)
+        iRet = iRet * -1;
+    return iRet;
+}
+
+int32_t MinMaxEx(ChessBoard currentPos, bool userToMove, int currentDepth, int depthToSearch, int alpha, int beta,
+    int32_t(*evalFunction)(ChessBoard, bool))
+{
+    /*supposed to be the improved version with the inclusion of alpha beta */
+
+    /*Say if all the moves are loosing moves.. all nodes return -iNFINITY according to the algorithm.. we still need to play a move
+     This flag detects whether a move has been selected for the UI*/
+    bool uiMoveSelected = false;
+
+    int32_t current_move_score;
+    int32_t best_score = -INFINITY32;
+    if (userToMove)
+    {
+        /*if a white pawn is in the 6th rank its a win for white! no need to check anything else*/
+        if ((RANK_6_MASK & currentPos.WhitePawns) != 0)
+            return INFINITY32;
+        /*if a black pawn is in the first rank its a win for black*/
+        if ((RANK_1_MASK & currentPos.BlackPawns) != 0)
+            return -INFINITY32;
+    }
+    else
+    {
+        /*if a black pawn is in the first rank its a win for black*/
+        if ((RANK_1_MASK & currentPos.BlackPawns) != 0)
+            return INFINITY32;
+
+
+        /*if a white pawn is in the 6th rank its a win for white! no need to check anything else*/
+        if ((RANK_6_MASK & currentPos.WhitePawns) != 0)
+            return -INFINITY32;
+    }
+
+    if (currentDepth == 0)
+        return evalFunction(currentPos, userToMove);
+
+    std::vector<ChessBoard> moves = PawnChessEngine::GenerateMoves(currentPos, userToMove);
+
+    /*if the side to move doesnt have any moves to play it has lost*/
+    if (moves.empty())
+        return -INFINITY32;
+
+    //----------------------END OF TERMINAL NODE DETECTION AREA-------------------------------------------
+
+    for (int i = 0; i < moves.size(); i++)
+    {
+        current_move_score = -MinMaxEx(moves[i], !userToMove, currentDepth - 1, depthToSearch, -beta, -alpha, evalFunction);
+
+        if (current_move_score > best_score)
+        {
+            best_score = current_move_score;
+
+            /* ----------------START OF UI MOVE SELECTION CODE-THIS IS SPECIFIC TO THIS APPLICATION AND IS NOT PART OF THE STANDARD ALPHA-BETA NEGAMAX ALGORITHM*/
+            if (currentDepth == depthToSearch)
+            {
+                /*update the global variable that is used by the UI to update the bitboard
+                 * Update the Move Selected flag to true
+                 */
+                ReplyMove = moves[i];
+                uiMoveSelected = true;
+            }
+            /* ---------------------------------------END OF UI SELECTION CODE-------------------------------------------------------------- ------------------*/
+
+        }
+
+        /* ----------------START OF UI MOVE SELECTION CODE-THIS IS SPECIFIC TO THIS APPLICATION AND IS NOT PART OF THE STANDARD ALPHA-BETA NEGAMAX ALGORITHM*/
+                        /*if we're are on the last move on the moves[] array and we still haven't picked a move to play,
+                         * We need to do it NOW! */
+        if (currentDepth == depthToSearch)
+        {
+            if (i == (moves.size() - 1))
+            {
+                if (!uiMoveSelected)
+                {
+                    /*select the first move for now; later we could do a evaluation
+                     * function and scientifically select the least worst move
+                     */
+                    MinMaxEx(currentPos, userToMove, 1, 1, -INFINITY32, INFINITY32, EvaluatePositionEx);
+                    // ReplyMove = moves[0];
+                    uiMoveSelected = true;
+                }
+            }
+        }
+        /* ---------------------------------------END OF UI SELECTION CODE-------------------------------------------------------------- ------------------*/
+
+        if (best_score > alpha)
+            alpha = best_score;
+
+        /*Beta cut off*/
+        if (alpha >= beta)
+            break;
+
+    }
+
+    return best_score;
+}
