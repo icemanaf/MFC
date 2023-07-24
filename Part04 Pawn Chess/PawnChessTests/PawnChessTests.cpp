@@ -132,7 +132,7 @@ namespace PawnChessTests
 
 			MOVE_STATUS result = PawnChessEngine::DetectWinLoss(whiteRankSix, true);
 
-			Assert::AreEqual((int)MOVE_STATUS::USER_WINS, (int)result); // Casting to int, due to runtime error from ToString not being defined on enum
+			Assert::IsTrue(MOVE_STATUS::USER_WINS == result);
 		}
 
 		TEST_METHOD(DetectWinLoss_WhiteCanCapture_MoveOk)
@@ -145,7 +145,7 @@ namespace PawnChessTests
 
 			MOVE_STATUS result = PawnChessEngine::DetectWinLoss(facing, true);
 
-			Assert::AreEqual((int)MOVE_STATUS::MOVE_OK, (int)result); // Casting to int, due to runtime error from ToString not being defined on enum
+			Assert::IsTrue(MOVE_STATUS::MOVE_OK == result);
 		}
 
 		TEST_METHOD(DetectWinLoss_WhiteNoMoves_SystemWins)
@@ -158,7 +158,7 @@ namespace PawnChessTests
 
 			MOVE_STATUS result = PawnChessEngine::DetectWinLoss(standoff, true);
 
-			Assert::AreEqual((int)MOVE_STATUS::SYSTEM_WINS, (int)result); // Casting to int, due to runtime error from ToString not being defined on enum
+			Assert::IsTrue(MOVE_STATUS::SYSTEM_WINS == result);
 		}
 
 		TEST_METHOD(MinMaxEx_WhiteInRank6Win_Infinity)
