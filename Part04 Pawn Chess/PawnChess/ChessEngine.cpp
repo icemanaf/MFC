@@ -347,15 +347,9 @@ bool PawnChessEngine::ValidateMove(ChessBoard currentPos, ChessBoard moveAfterPo
     return Bret;
 }
 
-MOVE_STATUS DetectWinLoss(ChessBoard currentPos, bool userToMove)
-{
-    // TODO:
-    return USER_WINS;
-}
-
 /* evaluation function
  * Currently only checks material count*/
-int32_t EvaluatePosition(ChessBoard currentPos, bool userToMove)
+int32_t PawnChessEngine::EvaluatePosition(ChessBoard currentPos, bool userToMove)
 {
     int32_t iRet = 0;
     if (userToMove)
@@ -378,7 +372,7 @@ int32_t EvaluatePosition(ChessBoard currentPos, bool userToMove)
     return iRet;
 }
 
-int32_t EvaluatePositionEx(ChessBoard currentPos, bool userToMove)
+int32_t PawnChessEngine::EvaluatePositionEx(ChessBoard currentPos, bool userToMove)
 {
     /*improved version of the eval used with minmaxEX
      Evaluated from whites point of view;negate for black*/
@@ -409,7 +403,7 @@ int32_t EvaluatePositionEx(ChessBoard currentPos, bool userToMove)
     return iRet;
 }
 
-int32_t MinMaxEx(ChessBoard currentPos, bool userToMove, int currentDepth, int depthToSearch, int alpha, int beta,
+int32_t PawnChessEngine::MinMaxEx(ChessBoard currentPos, bool userToMove, int currentDepth, int depthToSearch, int alpha, int beta,
     int32_t(*evalFunction)(ChessBoard, bool))
 {
     /*supposed to be the improved version with the inclusion of alpha beta */

@@ -133,7 +133,7 @@ namespace PawnChessTests
 			int depthToSearch = 11;
 
 			int32_t result = PawnChessEngine::MinMaxEx(currentPos, false, depthToSearch, depthToSearch,
-				-INFINITY32, INFINITY32, EvaluatePosition);
+				-INFINITY32, INFINITY32, PawnChessEngine::EvaluatePosition);
 
 			Assert::AreEqual(INFINITY32, result);
 		}
