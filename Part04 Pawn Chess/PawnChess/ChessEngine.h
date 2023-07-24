@@ -17,7 +17,7 @@ enum MOVE_STATUS
 };
 
 const int32_t INFINITY32 = 2147483647; // INFINITY was taken
-ChessBoard ReplyMove;
+static ChessBoard ReplyMove;
 
 class PawnChessEngine
 {
