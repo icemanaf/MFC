@@ -122,17 +122,56 @@ namespace PawnChessTests
 			Assert::IsFalse(valid);
 		}
 
+		TEST_METHOD(DetectWinLoss_WhiteInRank6Win_UserWins)
+		{
+			const uint64_t RANK_6_MASK = 0xFC0000000;
+			const uint64_t RANK_5_MASK = 0x3F000000;
+			ChessBoard whiteRankSix;
+			whiteRankSix.BlackPawns = RANK_5_MASK;
+			whiteRankSix.WhitePawns = RANK_6_MASK;
+
+			MOVE_STATUS result = PawnChessEngine::DetectWinLoss(whiteRankSix, true);
+
+			Assert::AreEqual((int)MOVE_STATUS::USER_WINS, (int)result); // Casting to int, due to runtime error from ToString not being defined on enum
+		}
+
+		TEST_METHOD(DetectWinLoss_WhiteCanCapture_MoveOk)
+		{
+			const uint64_t RANK_6_MASK = 0xFC0000000;
+			const uint64_t RANK_5_MASK = 0x3F000000;
+			ChessBoard facing;
+			facing.BlackPawns = RANK_6_MASK;
+			facing.WhitePawns = RANK_5_MASK;
+
+			MOVE_STATUS result = PawnChessEngine::DetectWinLoss(facing, true);
+
+			Assert::AreEqual((int)MOVE_STATUS::MOVE_OK, (int)result); // Casting to int, due to runtime error from ToString not being defined on enum
+		}
+
+		TEST_METHOD(DetectWinLoss_WhiteNoMoves_SystemWins)
+		{
+			ChessBoard standoff; // On A file
+			// 0000000000000000000000000000000000000000000000000000100000000000
+			standoff.BlackPawns = 0x800;
+			// 0000000000000000000000000000000000000000000000000000000000100000
+			standoff.WhitePawns = 0x20;
+
+			MOVE_STATUS result = PawnChessEngine::DetectWinLoss(standoff, true);
+
+			Assert::AreEqual((int)MOVE_STATUS::SYSTEM_WINS, (int)result); // Casting to int, due to runtime error from ToString not being defined on enum
+		}
+
 		TEST_METHOD(MinMaxEx_WhiteInRank6Win_Infinity)
 		{
 			const uint64_t RANK_6_MASK = 0xFC0000000;
 			const uint64_t RANK_5_MASK = 0x3F000000;
-			ChessBoard currentPos;
-			currentPos.BlackPawns = RANK_5_MASK;
-			currentPos.WhitePawns = RANK_6_MASK;
+			ChessBoard whiteRankSix;
+			whiteRankSix.BlackPawns = RANK_5_MASK;
+			whiteRankSix.WhitePawns = RANK_6_MASK;
 
 			int depthToSearch = 11;
 
-			int32_t result = PawnChessEngine::MinMaxEx(currentPos, true, depthToSearch, depthToSearch,
+			int32_t result = PawnChessEngine::MinMaxEx(whiteRankSix, true, depthToSearch, depthToSearch,
 				-INFINITY32, INFINITY32, PawnChessEngine::EvaluatePosition);
 
 			Assert::AreEqual(INFINITY32, result);
