@@ -132,10 +132,35 @@ namespace PawnChessTests
 
 			int depthToSearch = 11;
 
-			int32_t result = PawnChessEngine::MinMaxEx(currentPos, false, depthToSearch, depthToSearch,
+			int32_t result = PawnChessEngine::MinMaxEx(currentPos, true, depthToSearch, depthToSearch,
 				-INFINITY32, INFINITY32, PawnChessEngine::EvaluatePosition);
 
 			Assert::AreEqual(INFINITY32, result);
+		}
+
+		TEST_METHOD(EvaluatePosition_StartingPosition_Zero)
+		{
+			const uint64_t RANK_6_MASK = 0xFC0000000;
+			const uint64_t RANK_1_MASK = 0x3f;
+			ChessBoard starting;
+			starting.BlackPawns = RANK_6_MASK;
+			starting.WhitePawns = RANK_1_MASK;
+
+			int32_t result = PawnChessEngine::EvaluatePosition(starting, true);
+
+			Assert::AreEqual(0, result);
+		}
+
+		TEST_METHOD(EvaluatePosition_WhiteDownFive_Minus50k)
+		{
+			const uint64_t RANK_6_MASK = 0xFC0000000;
+			ChessBoard whiteDownFive;
+			whiteDownFive.BlackPawns = RANK_6_MASK;
+			whiteDownFive.WhitePawns = 0x1;
+
+			int32_t result = PawnChessEngine::EvaluatePosition(whiteDownFive, true);
+
+			Assert::AreEqual(-50000, result);
 		}
 
 	//private:
