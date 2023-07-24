@@ -17,7 +17,7 @@ enum MOVE_STATUS
 };
 
 
-static class PawnChessEngine
+class PawnChessEngine
 {
 public:
     //const int32_t INFINITY = 2147483647;

@@ -26,11 +26,8 @@ const int16_t PAWN_VALUE = 10000;
 //public delegate int Evaluate(ChessBoard currentPos, bool UserToMove);
 
 
-// May return nullptr
 std::vector<ChessBoard> PawnChessEngine::GenerateMoves(ChessBoard currentPos, bool userToMove)
 {
-    //todo 
-    int MoveArrayIndex = 0;
     int NoOfMoves = 0;//no of moves generated for this position
     uint64_t new_players_bitboard = 0;
     uint64_t new_oponents_bitboard = 0;
@@ -42,6 +39,9 @@ std::vector<ChessBoard> PawnChessEngine::GenerateMoves(ChessBoard currentPos, bo
     uint64_t RightCaptures = 0;
 
     std::vector<ChessBoard> generatedMoves;
+    // TODO: Is this the theoretical maximum?
+    const uint8_t MAXIMUM_MOVES = 18;
+    generatedMoves.reserve(MAXIMUM_MOVES);
 
 
     if (userToMove)
@@ -54,7 +54,6 @@ std::vector<ChessBoard> PawnChessEngine::GenerateMoves(ChessBoard currentPos, bo
         NoOfMoves = GetNoOfSetBits(Movers) + GetNoOfSetBits(LeftCaptures) + GetNoOfSetBits(RightCaptures);
         if (NoOfMoves > 0)
         {
-            std::vector<ChessBoard> generatedMoves(NoOfMoves);
 
             for (int i = 0; i < 36; i++)
             {
@@ -68,9 +67,10 @@ std::vector<ChessBoard> PawnChessEngine::GenerateMoves(ChessBoard currentPos, bo
                     //remove the captured black piece
                     new_oponents_bitboard = (~(bitCounter << 5)) & currentPos.BlackPawns;
 
-                    generatedMoves[MoveArrayIndex].WhitePawns = new_players_bitboard;
-                    generatedMoves[MoveArrayIndex].BlackPawns = new_oponents_bitboard;
-                    MoveArrayIndex++;
+                    ChessBoard newBoard;
+                    newBoard.WhitePawns = new_players_bitboard;
+                    newBoard.BlackPawns = new_oponents_bitboard;
+                    generatedMoves.push_back(newBoard);
                 }
 
 
@@ -81,10 +81,10 @@ std::vector<ChessBoard> PawnChessEngine::GenerateMoves(ChessBoard currentPos, bo
                     new_players_bitboard = (currentPos.WhitePawns & (~bitCounter) & BOARD_MASK) | (bitCounter << 7);
                     new_oponents_bitboard = (~(bitCounter << 7)) & currentPos.BlackPawns;
 
-
-                    generatedMoves[MoveArrayIndex].WhitePawns = new_players_bitboard;
-                    generatedMoves[MoveArrayIndex].BlackPawns = new_oponents_bitboard;
-                    MoveArrayIndex++;
+                    ChessBoard newBoard;
+                    newBoard.WhitePawns = new_players_bitboard;
+                    newBoard.BlackPawns = new_oponents_bitboard;
+                    generatedMoves.push_back(newBoard);
                 }
 
                 //generate positions from the white movers bit board
@@ -93,12 +93,10 @@ std::vector<ChessBoard> PawnChessEngine::GenerateMoves(ChessBoard currentPos, bo
                     // create a new board position
                     new_players_bitboard = (currentPos.WhitePawns & (~bitCounter)) | (bitCounter << 6);
 
-                    //add it to the move list
-                    generatedMoves[MoveArrayIndex].WhitePawns = new_players_bitboard;
-                    generatedMoves[MoveArrayIndex].BlackPawns = currentPos.BlackPawns;
-
-                    //increment the movecounter;
-                    MoveArrayIndex++;
+                    ChessBoard newBoard;
+                    newBoard.WhitePawns = new_players_bitboard;
+                    newBoard.BlackPawns = currentPos.BlackPawns;
+                    generatedMoves.push_back(newBoard);
                 }
 
 
@@ -117,8 +115,6 @@ std::vector<ChessBoard> PawnChessEngine::GenerateMoves(ChessBoard currentPos, bo
         if (NoOfMoves > 0)
         {
 
-            std::vector<ChessBoard> generatedMoves(NoOfMoves);
-
             for (int i = 0; i < 36; i++)
             {
 
@@ -129,10 +125,10 @@ std::vector<ChessBoard> PawnChessEngine::GenerateMoves(ChessBoard currentPos, bo
                     new_players_bitboard = ((currentPos.BlackPawns & BOARD_MASK & (~bitCounter)) | (bitCounter >> 5));
                     new_oponents_bitboard = (currentPos.WhitePawns & BOARD_MASK) & (~(bitCounter >> 5));
 
-                    generatedMoves[MoveArrayIndex].BlackPawns = new_players_bitboard;
-                    generatedMoves[MoveArrayIndex].WhitePawns = new_oponents_bitboard;
-
-                    MoveArrayIndex++;
+                    ChessBoard newBoard;
+                    newBoard.BlackPawns = new_players_bitboard;
+                    newBoard.WhitePawns = new_oponents_bitboard;
+                    generatedMoves.push_back(newBoard);
                 }
 
                 //left captures
@@ -142,9 +138,10 @@ std::vector<ChessBoard> PawnChessEngine::GenerateMoves(ChessBoard currentPos, bo
                     new_players_bitboard = ((currentPos.BlackPawns & BOARD_MASK & (~bitCounter)) | (bitCounter >> 7));
                     new_oponents_bitboard = ((currentPos.WhitePawns & BOARD_MASK) & (~(bitCounter >> 7)));
 
-                    generatedMoves[MoveArrayIndex].BlackPawns = new_players_bitboard;
-                    generatedMoves[MoveArrayIndex].WhitePawns = new_oponents_bitboard;
-                    MoveArrayIndex++;
+                    ChessBoard newBoard;
+                    newBoard.BlackPawns = new_players_bitboard;
+                    newBoard.WhitePawns = new_oponents_bitboard;
+                    generatedMoves.push_back(newBoard);
                 }
 
 
@@ -153,9 +150,12 @@ std::vector<ChessBoard> PawnChessEngine::GenerateMoves(ChessBoard currentPos, bo
                 if ((bitCounter & Movers) != 0)
                 {
                     new_players_bitboard = (((~bitCounter) & currentPos.BlackPawns & BOARD_MASK) | ((bitCounter) >> 6));
-                    generatedMoves[MoveArrayIndex].BlackPawns = new_players_bitboard;
-                    generatedMoves[MoveArrayIndex].WhitePawns = currentPos.WhitePawns;
-                    MoveArrayIndex++;
+
+
+                    ChessBoard newBoard;
+                    newBoard.BlackPawns = new_players_bitboard;
+                    newBoard.WhitePawns = currentPos.WhitePawns;
+                    generatedMoves.push_back(newBoard);
                 }
 
                 bitCounter = bitCounter << 1;
@@ -163,6 +163,7 @@ std::vector<ChessBoard> PawnChessEngine::GenerateMoves(ChessBoard currentPos, bo
 
         }
     }
+    generatedMoves.shrink_to_fit();
     return generatedMoves;
 }
 

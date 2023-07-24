@@ -27,7 +27,6 @@ namespace PawnChessTests
 			starting.BlackPawns = RANK_6_MASK;
 			starting.WhitePawns = RANK_1_MASK;
 
-			// TODO: The bool is always undefined?
 			std::vector<ChessBoard> moves = PawnChessEngine::GenerateMoves(starting, true);
 
 			Assert::AreEqual(6, static_cast<int>(moves.size()));
