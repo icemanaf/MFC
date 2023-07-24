@@ -24,8 +24,8 @@ namespace PawnChessTests
 			const uint64_t RANK_6_MASK = 0xFC0000000;
 			const uint64_t RANK_1_MASK = 0x3f;
 			ChessBoard starting;
-			starting.BlackPawns = RANK_6_MASK;
-			starting.WhitePawns = RANK_1_MASK;
+			starting.SystemPawns = RANK_6_MASK;
+			starting.UserPawns = RANK_1_MASK;
 
 			std::vector<ChessBoard> moves = PawnChessEngine::GenerateMoves(starting, true);
 
@@ -37,8 +37,8 @@ namespace PawnChessTests
 			const uint64_t RANK_6_MASK = 0xFC0000000;
 			const uint64_t RANK_5_MASK = 0x3F000000;
 			ChessBoard facing;
-			facing.BlackPawns = RANK_6_MASK;
-			facing.WhitePawns = RANK_5_MASK;
+			facing.SystemPawns = RANK_6_MASK;
+			facing.UserPawns = RANK_5_MASK;
 
 			std::vector<ChessBoard> moves = PawnChessEngine::GenerateMoves(facing, false);
 
@@ -50,8 +50,8 @@ namespace PawnChessTests
 			const uint64_t RANK_6_MASK = 0xFC0000000;
 			const uint64_t RANK_1_MASK = 0x3f;
 			ChessBoard starting;
-			starting.BlackPawns = RANK_6_MASK;
-			starting.WhitePawns = RANK_1_MASK;
+			starting.SystemPawns = RANK_6_MASK;
+			starting.UserPawns = RANK_1_MASK;
 
 			bool result = PawnChessEngine::IsPositionLegal(starting);
 			Assert::IsTrue(result);
@@ -61,13 +61,13 @@ namespace PawnChessTests
 		{
 			const uint64_t RANK_1_MASK = 0x3f;
 			ChessBoard overlapping;
-			overlapping.BlackPawns = RANK_1_MASK;
-			overlapping.WhitePawns = RANK_1_MASK;
+			overlapping.SystemPawns = RANK_1_MASK;
+			overlapping.UserPawns = RANK_1_MASK;
 
 			bool result1 = PawnChessEngine::IsPositionLegal(overlapping);
 			Assert::IsFalse(result1);
 
-			overlapping.WhitePawns = 0x1;
+			overlapping.UserPawns = 0x1;
 
 			bool result2 = PawnChessEngine::IsPositionLegal(overlapping);
 			Assert::IsFalse(result2);
@@ -78,8 +78,8 @@ namespace PawnChessTests
 			const uint64_t RANK_6_MASK = 0xFC0000000;
 			const uint64_t RANK_1_MASK = 0x3f;
 			ChessBoard starting;
-			starting.BlackPawns = RANK_6_MASK;
-			starting.WhitePawns = RANK_1_MASK;
+			starting.SystemPawns = RANK_6_MASK;
+			starting.UserPawns = RANK_1_MASK;
 
 			bool valid = PawnChessEngine::ValidateMove(starting, starting, true);
 
@@ -91,13 +91,13 @@ namespace PawnChessTests
 			const uint64_t RANK_6_MASK = 0xFC0000000;
 			const uint64_t RANK_1_MASK = 0x3f;
 			ChessBoard starting;
-			starting.BlackPawns = RANK_6_MASK;
-			starting.WhitePawns = RANK_1_MASK;
+			starting.SystemPawns = RANK_6_MASK;
+			starting.UserPawns = RANK_1_MASK;
 
 			ChessBoard ending;
-			ending.BlackPawns = RANK_6_MASK;
+			ending.SystemPawns = RANK_6_MASK;
 			// 0000000000000000000000000000000000000000000000000000100000011111
-			ending.WhitePawns = 0x81f;
+			ending.UserPawns = 0x81f;
 
 			bool valid = PawnChessEngine::ValidateMove(starting, ending, true);
 
@@ -109,13 +109,13 @@ namespace PawnChessTests
 			const uint64_t RANK_6_MASK = 0xFC0000000;
 			const uint64_t RANK_1_MASK = 0x3f;
 			ChessBoard starting;
-			starting.BlackPawns = RANK_6_MASK;
-			starting.WhitePawns = RANK_1_MASK;
+			starting.SystemPawns = RANK_6_MASK;
+			starting.UserPawns = RANK_1_MASK;
 
 			ChessBoard ending;
-			ending.BlackPawns = RANK_6_MASK;
+			ending.SystemPawns = RANK_6_MASK;
 			// 0000000000000000000000000000000000000000000000100000000000011111
-			ending.WhitePawns = 0x2001f;
+			ending.UserPawns = 0x2001f;
 
 			bool valid = PawnChessEngine::ValidateMove(starting, ending, true);
 
@@ -127,8 +127,8 @@ namespace PawnChessTests
 			const uint64_t RANK_6_MASK = 0xFC0000000;
 			const uint64_t RANK_5_MASK = 0x3F000000;
 			ChessBoard currentPos;
-			currentPos.BlackPawns = RANK_5_MASK;
-			currentPos.WhitePawns = RANK_6_MASK;
+			currentPos.SystemPawns = RANK_5_MASK;
+			currentPos.UserPawns = RANK_6_MASK;
 
 			int depthToSearch = 11;
 
@@ -143,8 +143,8 @@ namespace PawnChessTests
 			const uint64_t RANK_6_MASK = 0xFC0000000;
 			const uint64_t RANK_1_MASK = 0x3f;
 			ChessBoard starting;
-			starting.BlackPawns = RANK_6_MASK;
-			starting.WhitePawns = RANK_1_MASK;
+			starting.SystemPawns = RANK_6_MASK;
+			starting.UserPawns = RANK_1_MASK;
 
 			int32_t result = PawnChessEngine::EvaluatePosition(starting, true);
 
@@ -155,8 +155,8 @@ namespace PawnChessTests
 		{
 			const uint64_t RANK_6_MASK = 0xFC0000000;
 			ChessBoard whiteDownFive;
-			whiteDownFive.BlackPawns = RANK_6_MASK;
-			whiteDownFive.WhitePawns = 0x1;
+			whiteDownFive.SystemPawns = RANK_6_MASK;
+			whiteDownFive.UserPawns = 0x1;
 
 			int32_t result = PawnChessEngine::EvaluatePosition(whiteDownFive, true);
 

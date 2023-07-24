@@ -63,13 +63,13 @@ std::vector<ChessBoard> PawnChessEngine::GenerateMoves(ChessBoard currentPos, bo
                 if ((bitCounter & LeftCaptures) != 0)
                 {
                     //move the white pawn
-                    new_players_bitboard = (currentPos.WhitePawns & (~bitCounter)) | (bitCounter << 5);
+                    new_players_bitboard = (currentPos.UserPawns & (~bitCounter)) | (bitCounter << 5);
                     //remove the captured black piece
-                    new_oponents_bitboard = (~(bitCounter << 5)) & currentPos.BlackPawns;
+                    new_oponents_bitboard = (~(bitCounter << 5)) & currentPos.SystemPawns;
 
                     ChessBoard newBoard;
-                    newBoard.WhitePawns = new_players_bitboard;
-                    newBoard.BlackPawns = new_oponents_bitboard;
+                    newBoard.UserPawns = new_players_bitboard;
+                    newBoard.SystemPawns = new_oponents_bitboard;
                     generatedMoves.push_back(newBoard);
                 }
 
@@ -78,12 +78,12 @@ std::vector<ChessBoard> PawnChessEngine::GenerateMoves(ChessBoard currentPos, bo
                 if ((bitCounter & RightCaptures) != 0)
                 {
                     //todo
-                    new_players_bitboard = (currentPos.WhitePawns & (~bitCounter) & BOARD_MASK) | (bitCounter << 7);
-                    new_oponents_bitboard = (~(bitCounter << 7)) & currentPos.BlackPawns;
+                    new_players_bitboard = (currentPos.UserPawns & (~bitCounter) & BOARD_MASK) | (bitCounter << 7);
+                    new_oponents_bitboard = (~(bitCounter << 7)) & currentPos.SystemPawns;
 
                     ChessBoard newBoard;
-                    newBoard.WhitePawns = new_players_bitboard;
-                    newBoard.BlackPawns = new_oponents_bitboard;
+                    newBoard.UserPawns = new_players_bitboard;
+                    newBoard.SystemPawns = new_oponents_bitboard;
                     generatedMoves.push_back(newBoard);
                 }
 
@@ -91,11 +91,11 @@ std::vector<ChessBoard> PawnChessEngine::GenerateMoves(ChessBoard currentPos, bo
                 if ((bitCounter & Movers) != 0)
                 {
                     // create a new board position
-                    new_players_bitboard = (currentPos.WhitePawns & (~bitCounter)) | (bitCounter << 6);
+                    new_players_bitboard = (currentPos.UserPawns & (~bitCounter)) | (bitCounter << 6);
 
                     ChessBoard newBoard;
-                    newBoard.WhitePawns = new_players_bitboard;
-                    newBoard.BlackPawns = currentPos.BlackPawns;
+                    newBoard.UserPawns = new_players_bitboard;
+                    newBoard.SystemPawns = currentPos.SystemPawns;
                     generatedMoves.push_back(newBoard);
                 }
 
@@ -122,12 +122,12 @@ std::vector<ChessBoard> PawnChessEngine::GenerateMoves(ChessBoard currentPos, bo
                 if ((bitCounter & RightCaptures) != 0)
                 {
 
-                    new_players_bitboard = ((currentPos.BlackPawns & BOARD_MASK & (~bitCounter)) | (bitCounter >> 5));
-                    new_oponents_bitboard = (currentPos.WhitePawns & BOARD_MASK) & (~(bitCounter >> 5));
+                    new_players_bitboard = ((currentPos.SystemPawns & BOARD_MASK & (~bitCounter)) | (bitCounter >> 5));
+                    new_oponents_bitboard = (currentPos.UserPawns & BOARD_MASK) & (~(bitCounter >> 5));
 
                     ChessBoard newBoard;
-                    newBoard.BlackPawns = new_players_bitboard;
-                    newBoard.WhitePawns = new_oponents_bitboard;
+                    newBoard.SystemPawns = new_players_bitboard;
+                    newBoard.UserPawns = new_oponents_bitboard;
                     generatedMoves.push_back(newBoard);
                 }
 
@@ -135,12 +135,12 @@ std::vector<ChessBoard> PawnChessEngine::GenerateMoves(ChessBoard currentPos, bo
                 if ((bitCounter & LeftCaptures) != 0)
                 {
 
-                    new_players_bitboard = ((currentPos.BlackPawns & BOARD_MASK & (~bitCounter)) | (bitCounter >> 7));
-                    new_oponents_bitboard = ((currentPos.WhitePawns & BOARD_MASK) & (~(bitCounter >> 7)));
+                    new_players_bitboard = ((currentPos.SystemPawns & BOARD_MASK & (~bitCounter)) | (bitCounter >> 7));
+                    new_oponents_bitboard = ((currentPos.UserPawns & BOARD_MASK) & (~(bitCounter >> 7)));
 
                     ChessBoard newBoard;
-                    newBoard.BlackPawns = new_players_bitboard;
-                    newBoard.WhitePawns = new_oponents_bitboard;
+                    newBoard.SystemPawns = new_players_bitboard;
+                    newBoard.UserPawns = new_oponents_bitboard;
                     generatedMoves.push_back(newBoard);
                 }
 
@@ -149,12 +149,12 @@ std::vector<ChessBoard> PawnChessEngine::GenerateMoves(ChessBoard currentPos, bo
                 //movers
                 if ((bitCounter & Movers) != 0)
                 {
-                    new_players_bitboard = (((~bitCounter) & currentPos.BlackPawns & BOARD_MASK) | ((bitCounter) >> 6));
+                    new_players_bitboard = (((~bitCounter) & currentPos.SystemPawns & BOARD_MASK) | ((bitCounter) >> 6));
 
 
                     ChessBoard newBoard;
-                    newBoard.BlackPawns = new_players_bitboard;
-                    newBoard.WhitePawns = currentPos.WhitePawns;
+                    newBoard.SystemPawns = new_players_bitboard;
+                    newBoard.UserPawns = currentPos.UserPawns;
                     generatedMoves.push_back(newBoard);
                 }
 
@@ -172,10 +172,10 @@ uint64_t PawnChessEngine::GetUserMovers(ChessBoard currentPos)
     /*compute a bitboard of the user pawns that
      * are able to MOVE*/
      // get the bit board of the non occupied squares
-    uint64_t unoccupied_squares = (~(currentPos.BlackPawns | currentPos.WhitePawns)) & BOARD_MASK;
+    uint64_t unoccupied_squares = (~(currentPos.SystemPawns | currentPos.UserPawns)) & BOARD_MASK;
 
     //shift the user pawns up one rank and AND it with the unoccupied squares , this leaves us with the user pawns that have moved
-    uint64_t user_movers = (currentPos.WhitePawns << 6) & unoccupied_squares;
+    uint64_t user_movers = (currentPos.UserPawns << 6) & unoccupied_squares;
 
     /*shift down to the original positions, now you have the bitboard of the user pawns that can move forward*/
     user_movers = user_movers >> 6;
@@ -186,9 +186,9 @@ uint64_t PawnChessEngine::GetUserMovers(ChessBoard currentPos)
 uint64_t PawnChessEngine::GetSystemMovers(ChessBoard currentPos)
 {
     /*Compute a bit board of system pawns that can move ahead*/
-    uint64_t unoccupied_squares = (~(currentPos.BlackPawns | currentPos.WhitePawns)) & BOARD_MASK;
+    uint64_t unoccupied_squares = (~(currentPos.SystemPawns | currentPos.UserPawns)) & BOARD_MASK;
 
-    uint64_t system_movers = (currentPos.BlackPawns >> 6) & unoccupied_squares;
+    uint64_t system_movers = (currentPos.SystemPawns >> 6) & unoccupied_squares;
 
     //shift up to the original positions
     system_movers = system_movers << 6;
@@ -212,13 +212,13 @@ uint64_t PawnChessEngine::GetUserCapturesRight(ChessBoard currentPos)
     const uint64_t RIGHT_CAPTURE_MASK = 0x1F7DF7DF;
 
 
-    uint64_t user_right_captures = (currentPos.WhitePawns & RIGHT_CAPTURE_MASK); // this gives us the white pawns after it the cropping by the mask.
+    uint64_t user_right_captures = (currentPos.UserPawns & RIGHT_CAPTURE_MASK); // this gives us the white pawns after it the cropping by the mask.
 
     //shift the white pawns by 7,this moves them up by 1 rank , to the right diagonal
     user_right_captures = user_right_captures << 7;
 
     // AND it with the black pawns this gives the bitboard of the white pieces
-    user_right_captures = (user_right_captures & currentPos.BlackPawns);
+    user_right_captures = (user_right_captures & currentPos.SystemPawns);
 
     //move the result back to where they were before ; ie shift back 7 ;
     user_right_captures = user_right_captures >> 7;
@@ -236,13 +236,13 @@ uint64_t PawnChessEngine::GetSystemRightCaptures(ChessBoard currentPos)
 
     const uint64_t RIGHT_CAPTURE_MASK = 0x7DF7DF7C0;
 
-    uint64_t system_right_captures = (currentPos.BlackPawns & RIGHT_CAPTURE_MASK);
+    uint64_t system_right_captures = (currentPos.SystemPawns & RIGHT_CAPTURE_MASK);
 
     //shift the pawns down by 5,takes them to the right bottom diagnol.
     system_right_captures = system_right_captures >> 5;
 
     //AND it with the user pawns, gives us the system pawns that can capture 
-    system_right_captures = (system_right_captures & currentPos.WhitePawns);
+    system_right_captures = (system_right_captures & currentPos.UserPawns);
 
     //move the result to the original places
     system_right_captures = system_right_captures << 5;
@@ -269,13 +269,13 @@ uint64_t PawnChessEngine::GetUserCapturesLeft(ChessBoard currentPos)
 
 
     //crop with the mask
-    uint64_t user_left_captures = (currentPos.WhitePawns & LEFT_CAPTURE_MASK);
+    uint64_t user_left_captures = (currentPos.UserPawns & LEFT_CAPTURE_MASK);
 
     //shift the resultant value by 5to the right , to move it up by 1 rank to the left diagonal
     user_left_captures = user_left_captures << 5;
 
     //AND the result with the bitboard of the black pawns
-    user_left_captures = (user_left_captures & currentPos.BlackPawns & BOARD_MASK);
+    user_left_captures = (user_left_captures & currentPos.SystemPawns & BOARD_MASK);
 
 
     //shift it left by 5 to return the white pawns to where they were before
@@ -294,13 +294,13 @@ uint64_t PawnChessEngine::GetSystemLeftCaptures(ChessBoard currentPos)
     const uint64_t LEFT_CAPTURE_MASK = 0xFBEFBEF80;
 
     //crop using the mask to weed out the impossible captures ie the wraparounds
-    uint64_t system_left_captures = (currentPos.BlackPawns & LEFT_CAPTURE_MASK);
+    uint64_t system_left_captures = (currentPos.SystemPawns & LEFT_CAPTURE_MASK);
 
     //shift right by 7
     system_left_captures = system_left_captures >> 7;
 
     //AND the result with the bitboard of WHITE pawns
-    system_left_captures = (system_left_captures & currentPos.WhitePawns & BOARD_MASK);
+    system_left_captures = (system_left_captures & currentPos.UserPawns & BOARD_MASK);
 
     //shift the pieces back to the original positions
     system_left_captures = system_left_captures << 7;
@@ -326,7 +326,7 @@ uint8_t PawnChessEngine::GetNoOfSetBits(uint64_t bitBoard)
 bool PawnChessEngine::IsPositionLegal(ChessBoard currentPos)
 {
     //basic check- position conficts between white and black
-    return (currentPos.BlackPawns & currentPos.WhitePawns & BOARD_MASK) == 0 ? true : false;
+    return (currentPos.SystemPawns & currentPos.UserPawns & BOARD_MASK) == 0 ? true : false;
 }
 
 bool PawnChessEngine::ValidateMove(ChessBoard currentPos, ChessBoard moveAfterPos, bool userToMove)
@@ -337,7 +337,7 @@ bool PawnChessEngine::ValidateMove(ChessBoard currentPos, ChessBoard moveAfterPo
 
     for (int i = 0; i < possibleMovesFromPos.size(); i++)
     {
-        if ((moveAfterPos.WhitePawns == possibleMovesFromPos[i].WhitePawns) && (moveAfterPos.BlackPawns == possibleMovesFromPos[i].BlackPawns))
+        if ((moveAfterPos.UserPawns == possibleMovesFromPos[i].UserPawns) && (moveAfterPos.SystemPawns == possibleMovesFromPos[i].SystemPawns))
         {
             Bret = true;
             break;
@@ -361,12 +361,12 @@ int32_t PawnChessEngine::EvaluatePosition(ChessBoard currentPos, bool userToMove
         /* get the material count of the pawns*/
         //iRet += (GetNoOfSetBits(GetUserMovers(currentPos)) - GetNoOfSetBits(GetSystemMovers(currentPos))) * 10;
 
-        iRet += (GetNoOfSetBits(currentPos.WhitePawns) - GetNoOfSetBits(currentPos.BlackPawns)) * PAWN_VALUE;
+        iRet += (GetNoOfSetBits(currentPos.UserPawns) - GetNoOfSetBits(currentPos.SystemPawns)) * PAWN_VALUE;
     }
     else
     {
         //iRet += (GetNoOfSetBits(GetSystemMovers(currentPos)) - GetNoOfSetBits(GetUserMovers(currentPos)) )* 10;
-        iRet += (GetNoOfSetBits(currentPos.BlackPawns) - GetNoOfSetBits(currentPos.WhitePawns)) * PAWN_VALUE;
+        iRet += (GetNoOfSetBits(currentPos.SystemPawns) - GetNoOfSetBits(currentPos.UserPawns)) * PAWN_VALUE;
     }
 
     return iRet;
@@ -383,19 +383,19 @@ int32_t PawnChessEngine::EvaluatePositionEx(ChessBoard currentPos, bool userToMo
     iRet += (GetNoOfSetBits(GetUserMovers(currentPos)) - GetNoOfSetBits(GetSystemMovers(currentPos))) * 100;
 
     /* get the material count of the pawns*/
-    iRet += (GetNoOfSetBits(currentPos.WhitePawns) - GetNoOfSetBits(currentPos.BlackPawns)) * PAWN_VALUE;
+    iRet += (GetNoOfSetBits(currentPos.UserPawns) - GetNoOfSetBits(currentPos.SystemPawns)) * PAWN_VALUE;
 
 
     /*position based scores for unblocked pieces*/
-    iRet += GetNoOfSetBits(((RANK_2_MASK & currentPos.WhitePawns) << 5) & (~(currentPos.BlackPawns & RANK_3_MASK))) * 5;
-    iRet += GetNoOfSetBits(((RANK_3_MASK & currentPos.WhitePawns) << 5) & (~(currentPos.BlackPawns & RANK_4_MASK))) * 10;
-    iRet += GetNoOfSetBits(((RANK_4_MASK & currentPos.WhitePawns) << 5) & (~(currentPos.BlackPawns & RANK_5_MASK))) * 2000;
-    iRet += GetNoOfSetBits(((RANK_5_MASK & currentPos.WhitePawns) << 5) & (~(currentPos.BlackPawns & RANK_6_MASK))) * 50000;
+    iRet += GetNoOfSetBits(((RANK_2_MASK & currentPos.UserPawns) << 5) & (~(currentPos.SystemPawns & RANK_3_MASK))) * 5;
+    iRet += GetNoOfSetBits(((RANK_3_MASK & currentPos.UserPawns) << 5) & (~(currentPos.SystemPawns & RANK_4_MASK))) * 10;
+    iRet += GetNoOfSetBits(((RANK_4_MASK & currentPos.UserPawns) << 5) & (~(currentPos.SystemPawns & RANK_5_MASK))) * 2000;
+    iRet += GetNoOfSetBits(((RANK_5_MASK & currentPos.UserPawns) << 5) & (~(currentPos.SystemPawns & RANK_6_MASK))) * 50000;
 
-    iRet += GetNoOfSetBits(((RANK_2_MASK & currentPos.BlackPawns) >> 5) & (~(currentPos.WhitePawns & RANK_1_MASK))) * -50000;
-    iRet += GetNoOfSetBits(((RANK_3_MASK & currentPos.BlackPawns) >> 5) & (~(currentPos.WhitePawns & RANK_2_MASK))) * -2000;
-    iRet += GetNoOfSetBits(((RANK_4_MASK & currentPos.WhitePawns) >> 5) & (~(currentPos.WhitePawns & RANK_3_MASK))) * -10;
-    iRet += GetNoOfSetBits(((RANK_5_MASK & currentPos.WhitePawns) >> 5) & (~(currentPos.WhitePawns & RANK_4_MASK))) * -5;
+    iRet += GetNoOfSetBits(((RANK_2_MASK & currentPos.SystemPawns) >> 5) & (~(currentPos.UserPawns & RANK_1_MASK))) * -50000;
+    iRet += GetNoOfSetBits(((RANK_3_MASK & currentPos.SystemPawns) >> 5) & (~(currentPos.UserPawns & RANK_2_MASK))) * -2000;
+    iRet += GetNoOfSetBits(((RANK_4_MASK & currentPos.UserPawns) >> 5) & (~(currentPos.UserPawns & RANK_3_MASK))) * -10;
+    iRet += GetNoOfSetBits(((RANK_5_MASK & currentPos.UserPawns) >> 5) & (~(currentPos.UserPawns & RANK_4_MASK))) * -5;
 
 
     if (!userToMove)
@@ -417,21 +417,21 @@ int32_t PawnChessEngine::MinMaxEx(ChessBoard currentPos, bool userToMove, int cu
     if (userToMove)
     {
         /*if a white pawn is in the 6th rank its a win for white! no need to check anything else*/
-        if ((RANK_6_MASK & currentPos.WhitePawns) != 0)
+        if ((RANK_6_MASK & currentPos.UserPawns) != 0)
             return INFINITY32;
         /*if a black pawn is in the first rank its a win for black*/
-        if ((RANK_1_MASK & currentPos.BlackPawns) != 0)
+        if ((RANK_1_MASK & currentPos.SystemPawns) != 0)
             return -INFINITY32;
     }
     else
     {
         /*if a black pawn is in the first rank its a win for black*/
-        if ((RANK_1_MASK & currentPos.BlackPawns) != 0)
+        if ((RANK_1_MASK & currentPos.SystemPawns) != 0)
             return INFINITY32;
 
 
         /*if a white pawn is in the 6th rank its a win for white! no need to check anything else*/
-        if ((RANK_6_MASK & currentPos.WhitePawns) != 0)
+        if ((RANK_6_MASK & currentPos.UserPawns) != 0)
             return -INFINITY32;
     }
 

@@ -74,12 +74,14 @@ void Presenter::DisplayBoard(CDC* pdc,CRect clientRect)
 
                 switch (status) 
                 {
-                    case WHITE_PAWN:
-                        g.DrawImage(m_WhitePawn, col * m_chessSquareWidth + 20, row * m_chessSquareHeight, m_chessSquareWidth * m_ImageScaleFactor, m_chessSquareHeight * m_ImageScaleFactor);
+                    case USER_PAWN:
+                        m_UserIsWhite? g.DrawImage(m_WhitePawn, col * m_chessSquareWidth + 20, row * m_chessSquareHeight, m_chessSquareWidth * m_ImageScaleFactor, m_chessSquareHeight * m_ImageScaleFactor):
+                            g.DrawImage(m_BlackPawn, col * m_chessSquareWidth + 20, row * m_chessSquareHeight, m_chessSquareWidth * m_ImageScaleFactor, m_chessSquareHeight * m_ImageScaleFactor);
                         break;
 
-                    case BLACK_PAWN:
-                        g.DrawImage(m_BlackPawn, col * m_chessSquareWidth + 20, row  * m_chessSquareHeight, m_chessSquareWidth * m_ImageScaleFactor, m_chessSquareHeight * m_ImageScaleFactor);
+                    case SYSTEM_PAWN:
+                        m_UserIsWhite? g.DrawImage(m_BlackPawn, col * m_chessSquareWidth + 20, row  * m_chessSquareHeight, m_chessSquareWidth * m_ImageScaleFactor, m_chessSquareHeight * m_ImageScaleFactor): 
+                            g.DrawImage(m_WhitePawn, col * m_chessSquareWidth + 20, row * m_chessSquareHeight, m_chessSquareWidth * m_ImageScaleFactor, m_chessSquareHeight * m_ImageScaleFactor);
                         break;
                    
                 }
@@ -114,11 +116,26 @@ void Presenter::SetItemAtPos(int row, int col, CHESS_SQUARE item)
     m_displayArray[row][col] = item;
 }
 
-
-ChessBoard Presenter::ConvertFromArray(std::vector<int> boardArray)
+void Presenter::SetBoard(ChessBoard board)
 {
+}
+
+ChessBoard Presenter::GetBoard()
+{
+    ChessBoard ret;
+
+    for (int row = 0; row < ROWS;row++)
+    {
+        for(int col=0 ; col<COLS; col++)
+        {
+        }
+    }
+         
+
     return ChessBoard();
 }
+
+
 
 void Presenter::ResetBoard()
 {
@@ -132,38 +149,21 @@ void Presenter::ResetBoard()
     }
 
     //the human player starts from the bottom row , so set the white there
-    if (m_UserIsWhite)
-    {
-        m_displayArray[0][0] = WHITE_PAWN;
-        m_displayArray[0][1] = BLACK_PAWN;
-        m_displayArray[0][2] = WHITE_PAWN;
-        m_displayArray[0][3] = WHITE_PAWN;
-        m_displayArray[0][4] = WHITE_PAWN;
-        m_displayArray[0][5] = WHITE_PAWN;
+  
+        m_displayArray[0][0] = USER_PAWN;
+        m_displayArray[0][1] = SYSTEM_PAWN;
+        m_displayArray[0][2] = USER_PAWN;
+        m_displayArray[0][3] = USER_PAWN;
+        m_displayArray[0][4] = USER_PAWN;
+        m_displayArray[0][5] = USER_PAWN;
 
-        m_displayArray[5][0] = BLACK_PAWN;
-        m_displayArray[5][1] = BLACK_PAWN;
-        m_displayArray[5][2] = BLACK_PAWN;
-        m_displayArray[5][3] = BLACK_PAWN;
-        m_displayArray[5][4] = BLACK_PAWN;
-        m_displayArray[5][5] = WHITE_PAWN;
-    }
-    else
-    {
-        m_displayArray[0][0] = BLACK_PAWN;
-        m_displayArray[0][1] = BLACK_PAWN;
-        m_displayArray[0][2] = BLACK_PAWN;
-        m_displayArray[0][3] = BLACK_PAWN;
-        m_displayArray[0][4] = BLACK_PAWN;
-        m_displayArray[0][5] = BLACK_PAWN;
-
-        m_displayArray[5][0] = WHITE_PAWN;
-        m_displayArray[5][1] = WHITE_PAWN;
-        m_displayArray[5][2] = WHITE_PAWN;
-        m_displayArray[5][3] = WHITE_PAWN;
-        m_displayArray[5][4] = WHITE_PAWN;
-        m_displayArray[5][5] = WHITE_PAWN;
-    }
+        m_displayArray[5][0] = SYSTEM_PAWN;
+        m_displayArray[5][1] = SYSTEM_PAWN;
+        m_displayArray[5][2] = SYSTEM_PAWN;
+        m_displayArray[5][3] = SYSTEM_PAWN;
+        m_displayArray[5][4] = SYSTEM_PAWN;
+        m_displayArray[5][5] = USER_PAWN;
+   
 
 }
 

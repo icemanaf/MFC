@@ -3,8 +3,8 @@
 
 typedef struct Board
 {
-    uint64_t WhitePawns; // Formerly UserPawns
-    uint64_t BlackPawns; // Formerly SystemPawns
+    uint64_t UserPawns; 
+    uint64_t SystemPawns;
 }   ChessBoard;
 
 

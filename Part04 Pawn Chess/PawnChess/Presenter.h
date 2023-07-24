@@ -10,8 +10,8 @@ using namespace Gdiplus;
 enum CHESS_SQUARE
 {
 	EMPTY,
-	BLACK_PAWN,
-	WHITE_PAWN
+	SYSTEM_PAWN,
+	USER_PAWN
 };
 
 
@@ -41,7 +41,6 @@ private:
 	
 public:
 
-
 	Presenter();
 
 	~Presenter();
@@ -56,7 +55,9 @@ public:
 
 	void SetItemAtPos(int row,int col,CHESS_SQUARE item);
 
-	ChessBoard ConvertFromArray(std::vector<int> boardArray);
+	void SetBoard(ChessBoard board);
+
+	ChessBoard GetBoard();
 
 	void ResetBoard();
 };
