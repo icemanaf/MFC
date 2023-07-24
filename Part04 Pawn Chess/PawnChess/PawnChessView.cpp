@@ -66,28 +66,10 @@ void CPawnChessView::OnDraw(CDC* pdc)
 	CRect client;
 	GetClientRect(&client);
 
-	
-	CSize size(200, 200);
-	CPoint point(m_xPos, m_yPos);
 
-	CRect rect(point,size); // left, top, right, bottom
-	CBrush brush(RGB(204, 102, 0));   // black color
-	pdc->FillRect(&rect, &brush);
-
-	Graphics g(*pdc);
-	Pen      pen(Color(255, 0, 0, 255),3.0);
-	g.DrawLine(&pen, 0, 0, 1000, 1000);
+	m_Presenter.DisplayBoard(pdc,client);
 
 	
-
-	Image im(_T("bp.png"),TRUE);
-	
-
-	g.DrawImage(&im, 500, 500, 200, 200);
-	
-	
-
-
 	return;
 
 	CPawnChessDoc* pDoc = GetDocument();

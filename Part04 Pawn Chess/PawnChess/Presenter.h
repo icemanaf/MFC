@@ -5,7 +5,6 @@ using namespace Gdiplus;
 #pragma comment (lib,"Gdiplus.lib")
 
 
-
 enum CHESS_SQUARE
 {
 	EMPTY,
@@ -28,11 +27,22 @@ private:
 		{EMPTY,EMPTY,EMPTY,EMPTY,EMPTY},
 	};
 
-	bool m_WhiteIsUser = true;
+	bool m_UserIsWhite = true;
+
+	SolidBrush* m_lightBrush;
+	SolidBrush* m_darkBrush;
+	Image* m_BlackPawn;
+	Image* m_WhitePawn;
+	const double m_ImageScaleFactor = 0.75;
+	
 public:
+
+
 	Presenter();
 
-	void DisplayBoard(CDC* pdc);
+	~Presenter();
+
+	void DisplayBoard(CDC* pdc,CRect clientRect);
 
 	int GetSelectedSquare(int xMousePos, int  yMousePos);
 
