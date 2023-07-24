@@ -32,6 +32,19 @@ namespace PawnChessTests
 			Assert::AreEqual(6, static_cast<int>(moves.size()));
 		}
 
+		TEST_METHOD(GenerateMoves_FacingPositions_SizeTen)
+		{
+			const uint64_t RANK_6_MASK = 0xFC0000000;
+			const uint64_t RANK_5_MASK = 0x3F000000;
+			ChessBoard facing;
+			facing.BlackPawns = RANK_6_MASK;
+			facing.WhitePawns = RANK_5_MASK;
+
+			std::vector<ChessBoard> moves = PawnChessEngine::GenerateMoves(facing, false);
+
+			Assert::AreEqual(10, static_cast<int>(moves.size()));
+		}
+
 		TEST_METHOD(IsPositionLegal_StartingPosition_True)
 		{
 			const uint64_t RANK_6_MASK = 0xFC0000000;
