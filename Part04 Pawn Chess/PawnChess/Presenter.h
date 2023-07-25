@@ -29,7 +29,7 @@ private:
 		{EMPTY,EMPTY,EMPTY,EMPTY,EMPTY},
 	};
 
-	bool m_UserIsWhite = true;
+	bool m_UserPlaysWhite = true;
 
 	SolidBrush* m_lightBrush;
 	SolidBrush* m_darkBrush;
@@ -47,17 +47,27 @@ public:
 
 	void DisplayBoard(CDC* pdc,CRect clientRect);
 
+	/// <summary>
+	/// returns the row and col of the selected square that falls into xMousePos and yMousePos
+	/// </summary>
+	/// <param name="xMousePos"></param>
+	/// <param name="yMousePos"></param>
+	/// <returns></returns>
 	std::tuple<int, int> GetSelectedSquare(int xMousePos, int  yMousePos);
 
 	MOVE_STATUS Move(int startSquare, int targetSquare);
 
-	CHESS_SQUARE GetItemAtPos(int row, int col);
+	CHESS_SQUARE GetSquareAtPos(int row, int col);
 
-	void SetItemAtPos(int row,int col,CHESS_SQUARE item);
+	void UpdateSquareAtPos(int row,int col,CHESS_SQUARE item);
 
 	void SetBoard(ChessBoard board);
 
 	bool ValidateMove(ChessBoard prev, ChessBoard now);
+
+	void SetUserPlaysBlack(bool UserPlaysBlack);
+
+	bool UserPlaysBlack();
 
 	ChessBoard GetBoard();
 

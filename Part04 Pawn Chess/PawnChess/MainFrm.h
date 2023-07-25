@@ -38,7 +38,7 @@ protected:  // control bar embedded members
 protected:
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
 	afx_msg void OnApplicationLook(UINT id);
-	afx_msg void OnUpdateApplicationLook(CCmdUI* pCmdUI);
+//	afx_msg void OnUpdateApplicationLook(CCmdUI* pCmdUI);
 //	afx_msg void OnSettingChange(UINT uFlags, LPCTSTR lpszSection);
 	DECLARE_MESSAGE_MAP()
 

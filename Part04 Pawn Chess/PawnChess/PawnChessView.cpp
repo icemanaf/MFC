@@ -32,6 +32,9 @@ BEGIN_MESSAGE_MAP(CPawnChessView, CView)
 	ON_WM_LBUTTONDOWN()
 	ON_WM_LBUTTONUP()
 	ON_WM_MOUSEMOVE()
+	ON_COMMAND(ID_NEW_GAME, &CPawnChessView::OnNewGame)
+	ON_COMMAND(ID_USER_PLAYS_BLACK, &CPawnChessView::OnUserPlaysBlack)
+	ON_UPDATE_COMMAND_UI(ID_USER_PLAYS_BLACK, &CPawnChessView::OnUpdateCommandUI)
 END_MESSAGE_MAP()
 
 // CPawnChessView construction/destruction
@@ -41,9 +44,6 @@ CPawnChessView::CPawnChessView() noexcept
 	// TODO: add construction code here
 
 	 m_bDragging=FALSE;
-	 m_xPos=0;
-	 m_yPos=0;
-
 
 }
 
@@ -142,13 +142,13 @@ void CPawnChessView::OnLButtonUp(UINT nFlags, CPoint point)
 	
 	 if (m_userSelEndSquare != m_userSelStartSquare)
 	 {
-		 auto item = m_Presenter.GetItemAtPos(std::get<0>(m_userSelStartSquare), std::get<1>(m_userSelStartSquare));
+		 auto item = m_Presenter.GetSquareAtPos(std::get<0>(m_userSelStartSquare), std::get<1>(m_userSelStartSquare));
 
 		 auto prev_pos = m_Presenter.GetBoard();
 
-		 m_Presenter.SetItemAtPos(std::get<0>(m_userSelStartSquare), std::get<1>(m_userSelStartSquare), EMPTY);
+		 m_Presenter.UpdateSquareAtPos(std::get<0>(m_userSelStartSquare), std::get<1>(m_userSelStartSquare), EMPTY);
 
-		 m_Presenter.SetItemAtPos(std::get<0>(m_userSelEndSquare), std::get<1>(m_userSelEndSquare),item);
+		 m_Presenter.UpdateSquareAtPos(std::get<0>(m_userSelEndSquare), std::get<1>(m_userSelEndSquare),item);
 
 		 auto current_pos = m_Presenter.GetBoard();
 
@@ -168,11 +168,18 @@ void CPawnChessView::OnLButtonUp(UINT nFlags, CPoint point)
 		 {
 			 //do minmax here
 
+
+
+
+
+
 			const int depthToSearch = 14;
 
 			PawnChessEngine::MinMaxEx(current_pos, false, depthToSearch, depthToSearch, -INFINITY32, INFINITY32, PawnChessEngine::EvaluatePosition);
 			
 			m_Presenter.SetBoard(PawnChessEngine::ReplyMove);
+
+
 
 		 }
 
@@ -205,4 +212,47 @@ void CPawnChessView::OnMouseMove(UINT nFlags, CPoint point)
 
 
 	CView::OnMouseMove(nFlags, point);
+}
+
+
+void CPawnChessView::OnNewGame()
+{
+	m_Presenter.ResetBoard();
+
+	Invalidate();
+}
+
+
+void CPawnChessView::OnUserPlaysBlack()
+{
+	auto ret =	CWnd::MessageBox(_T("This will reset the game"),_T("Swap sides?"), MB_YESNO | MB_DEFBUTTON2 | MB_ICONQUESTION);
+
+	if (ret == IDYES)
+	{
+		auto status= m_Presenter.UserPlaysBlack();
+
+		m_Presenter.SetUserPlaysBlack(!status);
+
+		if (!status)
+		{
+			//the machine is now white so it has to move first.
+
+			auto current_pos = m_Presenter.GetBoard();
+
+			const int depthToSearch = 14;
+
+			PawnChessEngine::MinMaxEx(current_pos, false, depthToSearch, depthToSearch, -INFINITY32, INFINITY32, PawnChessEngine::EvaluatePosition);
+
+			m_Presenter.SetBoard(PawnChessEngine::ReplyMove);
+
+		}
+
+		Invalidate();
+	}
+}
+
+
+void CPawnChessView::OnUpdateCommandUI(CCmdUI* pCmdUI)
+{
+	pCmdUI->SetCheck(m_Presenter.UserPlaysBlack()?1:0);
 }
