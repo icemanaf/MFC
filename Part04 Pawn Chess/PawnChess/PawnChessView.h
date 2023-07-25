@@ -37,8 +37,6 @@ public:
 private:
 	Presenter m_Presenter;
 	BOOL m_bDragging;
-	int m_xPos;
-	int m_yPos;
 	std::tuple<int,int> m_userSelStartSquare;
 	std::tuple<int, int> m_userSelEndSquare;
 
@@ -52,6 +50,9 @@ public:
 	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
 	afx_msg void OnLButtonUp(UINT nFlags, CPoint point);
 	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
+	afx_msg void OnNewGame();
+	afx_msg void OnUserPlaysBlack();
+	afx_msg void OnUpdateCommandUI(CCmdUI* pCmdUI);
 };
 
 
