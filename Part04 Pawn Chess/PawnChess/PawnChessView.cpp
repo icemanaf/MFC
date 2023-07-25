@@ -219,6 +219,23 @@ void CPawnChessView::OnNewGame()
 {
 	m_Presenter.ResetBoard();
 
+	auto status = m_Presenter.UserPlaysBlack();
+
+	if (status)
+	{
+		//the machine is now white so it has to move first.
+
+		auto current_pos = m_Presenter.GetBoard();
+
+		const int depthToSearch = 14;
+
+		PawnChessEngine::MinMaxEx(current_pos, false, depthToSearch, depthToSearch, -INFINITY32, INFINITY32, PawnChessEngine::EvaluatePosition);
+
+		m_Presenter.SetBoard(PawnChessEngine::ReplyMove);
+
+	}
+	
+
 	Invalidate();
 }
 
@@ -235,7 +252,7 @@ void CPawnChessView::OnUserPlaysBlack()
 
 		if (!status)
 		{
-			//the machine is now white so it has to move first.
+			//the machine is now playing white so it has to move first.
 
 			auto current_pos = m_Presenter.GetBoard();
 
