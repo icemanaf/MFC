@@ -132,6 +132,8 @@ void CPawnChessView::OnLButtonUp(UINT nFlags, CPoint point)
 {
 	// TODO: Add your message handler code here and/or call default
 
+	MOVE_STATUS winResult = MOVE_OK; // Lazy way of tracking this
+
 	CPoint mousePos;
 
 	GetCursorPos(&mousePos);
@@ -168,11 +170,33 @@ void CPawnChessView::OnLButtonUp(UINT nFlags, CPoint point)
 		 {
 			 //do minmax here
 
-			const int depthToSearch = 14;
+			 if (PawnChessEngine::DetectWinLoss(current_pos, false) == SYSTEM_WINS)
+			 {
+				 winResult = SYSTEM_WINS;
+			 }
+			 else if (PawnChessEngine::DetectWinLoss(current_pos, true) == USER_WINS)
+			 {
+				 winResult = USER_WINS;
+			 }
 
-			PawnChessEngine::MinMaxEx(current_pos, false, depthToSearch, depthToSearch, -INFINITY32, INFINITY32, PawnChessEngine::EvaluatePosition);
-			
-			m_Presenter.SetBoard(PawnChessEngine::ReplyMove);
+			 if (!winResult)
+			 {
+				 const int depthToSearch = 14;
+
+				 PawnChessEngine::MinMaxEx(current_pos, false, depthToSearch, depthToSearch, -INFINITY32, INFINITY32, PawnChessEngine::EvaluatePosition);
+
+				 m_Presenter.SetBoard(PawnChessEngine::ReplyMove);
+
+				 MOVE_STATUS replyMoveResult = PawnChessEngine::DetectWinLoss(PawnChessEngine::ReplyMove, false);
+				 if (replyMoveResult == SYSTEM_WINS)
+				 {
+					 winResult = SYSTEM_WINS;
+				 }
+				 else if (replyMoveResult == USER_WINS)
+				 {
+					 winResult = USER_WINS;
+				 }
+			 }
 
 		 }
 
@@ -183,11 +207,18 @@ void CPawnChessView::OnLButtonUp(UINT nFlags, CPoint point)
 	ReleaseCapture();
 	Invalidate();
 
+	if (winResult == SYSTEM_WINS)
+	{
+		CWnd::MessageBox(_T("System Wins!"));
+	}
+	if (winResult == USER_WINS)
+	{
+		CWnd::MessageBox(_T("User Wins!"));
+	}
 	
 
 	CView::OnLButtonUp(nFlags, point);
 }
-
 
 void CPawnChessView::OnMouseMove(UINT nFlags, CPoint point)
 {
