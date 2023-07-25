@@ -25,6 +25,7 @@ public:
     static std::vector<ChessBoard> GenerateMoves(ChessBoard currentPos, bool userToMove);
     static bool IsPositionLegal(ChessBoard currentPos);
     static bool ValidateMove(ChessBoard currentPos, ChessBoard moveAfterPos, bool userToMove);
+    static MOVE_STATUS DetectWinLoss(ChessBoard currentPos, bool userToMove);
     static int32_t EvaluatePosition(ChessBoard currentPos, bool userToMove);
     static int32_t MinMaxEx(ChessBoard currentPos, bool userToMove, int currentDepth, int depthToSearch, int alpha, int beta,
         int32_t (*evalFunction)(ChessBoard, bool));

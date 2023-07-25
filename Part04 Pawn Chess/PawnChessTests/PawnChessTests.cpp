@@ -122,17 +122,56 @@ namespace PawnChessTests
 			Assert::IsFalse(valid);
 		}
 
+		TEST_METHOD(DetectWinLoss_WhiteInRank6Win_UserWins)
+		{
+			const uint64_t RANK_6_MASK = 0xFC0000000;
+			const uint64_t RANK_5_MASK = 0x3F000000;
+			ChessBoard whiteRankSix;
+			whiteRankSix.SystemPawns = RANK_5_MASK;
+			whiteRankSix.UserPawns = RANK_6_MASK;
+
+			MOVE_STATUS result = PawnChessEngine::DetectWinLoss(whiteRankSix, true);
+
+			Assert::IsTrue(MOVE_STATUS::USER_WINS == result);
+		}
+
+		TEST_METHOD(DetectWinLoss_WhiteCanCapture_MoveOk)
+		{
+			const uint64_t RANK_6_MASK = 0xFC0000000;
+			const uint64_t RANK_5_MASK = 0x3F000000;
+			ChessBoard facing;
+			facing.SystemPawns = RANK_6_MASK;
+			facing.UserPawns = RANK_5_MASK;
+
+			MOVE_STATUS result = PawnChessEngine::DetectWinLoss(facing, true);
+
+			Assert::IsTrue(MOVE_STATUS::MOVE_OK == result);
+		}
+
+		TEST_METHOD(DetectWinLoss_WhiteNoMoves_SystemWins)
+		{
+			ChessBoard standoff; // On A file
+			// 0000000000000000000000000000000000000000000000000000100000000000
+			standoff.SystemPawns = 0x800;
+			// 0000000000000000000000000000000000000000000000000000000000100000
+			standoff.UserPawns = 0x20;
+
+			MOVE_STATUS result = PawnChessEngine::DetectWinLoss(standoff, true);
+
+			Assert::IsTrue(MOVE_STATUS::SYSTEM_WINS == result);
+		}
+
 		TEST_METHOD(MinMaxEx_WhiteInRank6Win_Infinity)
 		{
 			const uint64_t RANK_6_MASK = 0xFC0000000;
 			const uint64_t RANK_5_MASK = 0x3F000000;
-			ChessBoard currentPos;
-			currentPos.SystemPawns = RANK_5_MASK;
-			currentPos.UserPawns = RANK_6_MASK;
+			ChessBoard whiteRankSix;
+			whiteRankSix.SystemPawns = RANK_5_MASK;
+			whiteRankSix.UserPawns = RANK_6_MASK;
 
 			int depthToSearch = 11;
 
-			int32_t result = PawnChessEngine::MinMaxEx(currentPos, true, depthToSearch, depthToSearch,
+			int32_t result = PawnChessEngine::MinMaxEx(whiteRankSix, true, depthToSearch, depthToSearch,
 				-INFINITY32, INFINITY32, PawnChessEngine::EvaluatePosition);
 
 			Assert::AreEqual(INFINITY32, result);
@@ -175,11 +214,11 @@ namespace PawnChessTests
 	//			{
 	//				if (graphicalBoard[j, i].Image == imgSystemPawn)
 	//				{
-	//					retBoard.BlackPawns = retBoard.BlackPawns | bitCounter;
+	//					retBoard.SystemPawns = retBoard.SystemPawns | bitCounter;
 	//				}
 	//				else if (graphicalBoard[j, i].Image == imgUserPawn)
 	//				{
-	//					retBoard.WhitePawns = retBoard.WhitePawns | bitCounter;
+	//					retBoard.UserPawns = retBoard.UserPawns | bitCounter;
 	//				}
 	//				bitCounter = bitCounter << 1; // this will be our mask
 	//			}

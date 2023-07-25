@@ -348,6 +348,41 @@ bool PawnChessEngine::ValidateMove(ChessBoard currentPos, ChessBoard moveAfterPo
     return Bret;
 }
 
+MOVE_STATUS PawnChessEngine::DetectWinLoss(ChessBoard currentPos, bool userToMove)
+{
+    int noOfPossibleMoves = 0;
+    if (userToMove)
+    {
+        //white to move
+        if ((RANK_6_MASK & currentPos.UserPawns) != 0)
+            return MOVE_STATUS::USER_WINS;
+
+        //if no moves are possible for user then system wins
+
+        noOfPossibleMoves = GetNoOfSetBits(GetUserMovers(currentPos)) + GetNoOfSetBits(GetUserCapturesRight(currentPos)) + GetNoOfSetBits(GetUserCapturesLeft(currentPos));
+
+        if (noOfPossibleMoves == 0)
+            return MOVE_STATUS::SYSTEM_WINS;
+
+        return MOVE_STATUS::MOVE_OK;
+    }
+    else
+    {
+        //system to move
+        if ((RANK_1_MASK & currentPos.SystemPawns) != 0)
+            return MOVE_STATUS::SYSTEM_WINS;
+
+
+
+        noOfPossibleMoves = GetNoOfSetBits(GetSystemMovers(currentPos)) + GetNoOfSetBits(GetSystemLeftCaptures(currentPos)) + GetNoOfSetBits(GetSystemRightCaptures(currentPos));
+
+        if (noOfPossibleMoves == 0)
+            return MOVE_STATUS::USER_WINS;
+
+        return MOVE_STATUS::MOVE_OK;
+    }
+}
+
 /* evaluation function
  * Currently only checks material count*/
 int32_t PawnChessEngine::EvaluatePosition(ChessBoard currentPos, bool userToMove)
