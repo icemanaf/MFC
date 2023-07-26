@@ -53,6 +53,7 @@ public:
 	afx_msg void OnNewGame();
 	afx_msg void OnUserPlaysBlack();
 	afx_msg void OnUpdateCommandUI(CCmdUI* pCmdUI);
+	afx_msg void OnSettingsClicked();
 };
 
 

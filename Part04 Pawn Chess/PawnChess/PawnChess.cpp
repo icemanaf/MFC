@@ -153,6 +153,8 @@ private:
 	GdiplusStartupInput gdiplusStartupInput;
 public:
 	ULONG_PTR gdiplusToken;
+	afx_msg void OnBnClickedOk();
+	CButton btnOK;
 };
 
 CAboutDlg::CAboutDlg() noexcept : CDialogEx(IDD_ABOUTBOX)
@@ -162,9 +164,11 @@ CAboutDlg::CAboutDlg() noexcept : CDialogEx(IDD_ABOUTBOX)
 void CAboutDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
+	DDX_Control(pDX, IDOK, btnOK);
 }
 
 BEGIN_MESSAGE_MAP(CAboutDlg, CDialogEx)
+	ON_BN_CLICKED(IDOK, &CAboutDlg::OnBnClickedOk)
 END_MESSAGE_MAP()
 
 // App command to run the dialog
@@ -187,4 +191,11 @@ int CPawnChessApp::ExitInstance()
 	GdiplusShutdown(gdiplusToken);
 
 	return CWinApp::ExitInstance();
+}
+
+
+void CAboutDlg::OnBnClickedOk()
+{
+	// TODO: Add your control notification handler code here
+	CDialogEx::OnOK();
 }

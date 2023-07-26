@@ -22,17 +22,21 @@
 #define IDS_BUILD_TAB                   300
 #define IDS_DEBUG_TAB                   301
 #define IDS_FIND_TAB                    302
+#define IDD_SETTINGS                    312
+#define IDC_SLIDER_PLY                  1006
+#define IDC_LABEL_PLY_VAL               1007
 #define ID_NEW                          32771
 #define ID_NEW_GAME                     32772
 #define ID_USER_PLAYS_BLACK             32773
+#define ID_GAME_SETTINGS                32774
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        310
-#define _APS_NEXT_COMMAND_VALUE         32774
-#define _APS_NEXT_CONTROL_VALUE         1000
+#define _APS_NEXT_RESOURCE_VALUE        314
+#define _APS_NEXT_COMMAND_VALUE         32776
+#define _APS_NEXT_CONTROL_VALUE         1008
 #define _APS_NEXT_SYMED_VALUE           310
 #endif
 #endif

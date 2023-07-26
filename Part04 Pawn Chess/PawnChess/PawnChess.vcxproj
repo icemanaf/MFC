@@ -184,6 +184,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="ChessEngine.h" />
+    <ClInclude Include="CSettingsDlg.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="MainFrm.h" />
     <ClInclude Include="PawnChess.h" />
@@ -196,6 +197,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ChessEngine.cpp" />
+    <ClCompile Include="CSettingsDlg.cpp" />
     <ClCompile Include="MainFrm.cpp" />
     <ClCompile Include="PawnChess.cpp" />
     <ClCompile Include="PawnChessDoc.cpp" />

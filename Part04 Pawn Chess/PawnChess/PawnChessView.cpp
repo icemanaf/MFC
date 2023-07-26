@@ -13,8 +13,10 @@
 #include "PawnChessDoc.h"
 #include "PawnChessView.h"
 
+
 #include <gdiplus.h>
 #include <tuple>
+#include "CSettingsDlg.h"
 using namespace Gdiplus;
 #pragma comment (lib,"Gdiplus.lib")
 
@@ -35,6 +37,7 @@ BEGIN_MESSAGE_MAP(CPawnChessView, CView)
 	ON_COMMAND(ID_NEW_GAME, &CPawnChessView::OnNewGame)
 	ON_COMMAND(ID_USER_PLAYS_BLACK, &CPawnChessView::OnUserPlaysBlack)
 	ON_UPDATE_COMMAND_UI(ID_USER_PLAYS_BLACK, &CPawnChessView::OnUpdateCommandUI)
+	ON_COMMAND(ID_GAME_SETTINGS, &CPawnChessView::OnSettingsClicked)
 END_MESSAGE_MAP()
 
 // CPawnChessView construction/destruction
@@ -296,4 +299,24 @@ void CPawnChessView::OnUserPlaysBlack()
 void CPawnChessView::OnUpdateCommandUI(CCmdUI* pCmdUI)
 {
 	pCmdUI->SetCheck(m_Presenter.UserPlaysBlack()?1:0);
+}
+
+
+void CPawnChessView::OnSettingsClicked()
+{
+	// TODO: Add your command handler code here
+	CSettingsDlg dialog;
+
+	dialog.SetPly(15);
+
+	dialog.DoModal();
+
+	auto ply = dialog.GetPly();
+
+	if (ply > 0)
+	{
+		//set ply
+	}
+
+
 }
