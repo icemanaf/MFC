@@ -99,6 +99,28 @@ void CPawnChessView::Dump(CDumpContext& dc) const
 	CView::Dump(dc);
 }
 
+
+/// <summary>
+/// check if this is a winning position
+/// </summary>
+/// <param name="pos"></param>
+/// <returns></returns>
+MOVE_STATUS CPawnChessView::CheckWinner(ChessBoard pos)
+{
+	MOVE_STATUS winStatus = MOVE_OK;
+
+	if (PawnChessEngine::DetectWinLoss(pos, false) == SYSTEM_WINS)
+	{
+		winStatus = SYSTEM_WINS;
+	}
+	else if (PawnChessEngine::DetectWinLoss(pos, true) == USER_WINS)
+	{
+		winStatus = USER_WINS;
+	}
+
+	return winStatus;
+}
+
 CPawnChessDoc* CPawnChessView::GetDocument() const // non-debug version is inline
 {
 	ASSERT(m_pDocument->IsKindOf(RUNTIME_CLASS(CPawnChessDoc)));
@@ -173,14 +195,7 @@ void CPawnChessView::OnLButtonUp(UINT nFlags, CPoint point)
 		 {
 			 //do minmax here
 
-			 if (PawnChessEngine::DetectWinLoss(current_pos, false) == SYSTEM_WINS)
-			 {
-				 winResult = SYSTEM_WINS;
-			 }
-			 else if (PawnChessEngine::DetectWinLoss(current_pos, true) == USER_WINS)
-			 {
-				 winResult = USER_WINS;
-			 }
+			 winResult = CheckWinner(current_pos);
 
 			 if (!winResult)
 			 {
@@ -199,6 +214,9 @@ void CPawnChessView::OnLButtonUp(UINT nFlags, CPoint point)
 				 {
 					 winResult = USER_WINS;
 				 }
+
+				 winResult = CheckWinner(PawnChessEngine::ReplyMove);
+
 			 }
 
 		 }

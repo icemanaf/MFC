@@ -39,6 +39,7 @@ private:
 	BOOL m_bDragging;
 	std::tuple<int,int> m_userSelStartSquare;
 	std::tuple<int, int> m_userSelEndSquare;
+	MOVE_STATUS CheckWinner(ChessBoard pos);
 
 
 protected:
