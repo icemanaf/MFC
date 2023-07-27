@@ -38,6 +38,7 @@ private:
 	const double m_ImageScaleFactor = 0.75;
 	int m_chessSquareHeight = 0;
 	int m_chessSquareWidth = 0;
+	int m_ply = 14;
 	
 public:
 
@@ -70,6 +71,10 @@ public:
 	bool UserPlaysBlack();
 
 	ChessBoard GetBoard();
+
+	void SetPly(int ply);
+
+	int GetPly();
 
 	void ResetBoard();
 };

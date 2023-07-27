@@ -20,7 +20,11 @@ Presenter::Presenter()
 
     m_UserPlaysWhite = true;
 
-     ResetBoard();
+    //default ply depth
+    m_ply = 14;
+
+    ResetBoard();
+
 
 }
 
@@ -194,6 +198,16 @@ ChessBoard Presenter::GetBoard()
          
 
     return ret;
+}
+
+void Presenter::SetPly(int ply)
+{
+    m_ply = ply;
+}
+
+int Presenter::GetPly()
+{
+    return m_ply;
 }
 
 

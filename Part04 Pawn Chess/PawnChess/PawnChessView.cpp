@@ -184,7 +184,7 @@ void CPawnChessView::OnLButtonUp(UINT nFlags, CPoint point)
 
 			 if (!winResult)
 			 {
-				 const int depthToSearch = 14;
+				 int depthToSearch = m_Presenter.GetPly();
 
 				 PawnChessEngine::MinMaxEx(current_pos, false, depthToSearch, depthToSearch, -INFINITY32, INFINITY32, PawnChessEngine::EvaluatePosition);
 
@@ -254,7 +254,7 @@ void CPawnChessView::OnNewGame()
 
 		auto current_pos = m_Presenter.GetBoard();
 
-		const int depthToSearch = 14;
+		int depthToSearch = m_Presenter.GetPly();
 
 		PawnChessEngine::MinMaxEx(current_pos, false, depthToSearch, depthToSearch, -INFINITY32, INFINITY32, PawnChessEngine::EvaluatePosition);
 
@@ -283,7 +283,7 @@ void CPawnChessView::OnUserPlaysBlack()
 
 			auto current_pos = m_Presenter.GetBoard();
 
-			const int depthToSearch = 14;
+			int depthToSearch = m_Presenter.GetPly();
 
 			PawnChessEngine::MinMaxEx(current_pos, false, depthToSearch, depthToSearch, -INFINITY32, INFINITY32, PawnChessEngine::EvaluatePosition);
 
@@ -307,7 +307,8 @@ void CPawnChessView::OnSettingsClicked()
 	// TODO: Add your command handler code here
 	CSettingsDlg dialog;
 
-	dialog.SetPly(15);
+	//get ply
+	dialog.SetPly(m_Presenter.GetPly());
 
 	dialog.DoModal();
 
@@ -316,6 +317,8 @@ void CPawnChessView::OnSettingsClicked()
 	if (ply > 0)
 	{
 		//set ply
+		m_Presenter.SetPly(ply);
+
 	}
 
 
