@@ -208,7 +208,7 @@ void CPawnChessView::OnLButtonUp(UINT nFlags, CPoint point)
 
 	m_bDragging = FALSE;
 	ReleaseCapture();
-	Invalidate();
+	Invalidate(FALSE);
 
 	if (winResult == SYSTEM_WINS)
 	{
