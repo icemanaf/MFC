@@ -263,7 +263,7 @@ void CPawnChessView::OnNewGame()
 	}
 	
 
-	Invalidate();
+	Invalidate(FALSE);
 }
 
 
@@ -291,7 +291,7 @@ void CPawnChessView::OnUserPlaysBlack()
 
 		}
 
-		Invalidate();
+		Invalidate(FALSE);
 	}
 }
 
