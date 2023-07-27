@@ -39,7 +39,7 @@ private:
 	BOOL m_bDragging;
 	std::tuple<int,int> m_userSelStartSquare;
 	std::tuple<int, int> m_userSelEndSquare;
-	MOVE_STATUS CheckWinner(ChessBoard pos);
+	
 
 
 protected:
@@ -48,6 +48,7 @@ protected:
 protected:
 	DECLARE_MESSAGE_MAP()
 public:
+	MOVE_STATUS CheckWinner(ChessBoard pos);
 	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
 	afx_msg void OnLButtonUp(UINT nFlags, CPoint point);
 	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
@@ -55,6 +56,7 @@ public:
 	afx_msg void OnUserPlaysBlack();
 	afx_msg void OnUpdateCommandUI(CCmdUI* pCmdUI);
 	afx_msg void OnSettingsClicked();
+	
 };
 
 

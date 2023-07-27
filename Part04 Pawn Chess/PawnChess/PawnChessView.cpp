@@ -17,6 +17,7 @@
 #include <gdiplus.h>
 #include <tuple>
 #include "CSettingsDlg.h"
+
 using namespace Gdiplus;
 #pragma comment (lib,"Gdiplus.lib")
 
@@ -100,6 +101,15 @@ void CPawnChessView::Dump(CDumpContext& dc) const
 }
 
 
+
+CPawnChessDoc* CPawnChessView::GetDocument() const // non-debug version is inline
+{
+	ASSERT(m_pDocument->IsKindOf(RUNTIME_CLASS(CPawnChessDoc)));
+	return (CPawnChessDoc*)m_pDocument;
+}
+#endif //_DEBUG
+
+
 /// <summary>
 /// check if this is a winning position
 /// </summary>
@@ -121,12 +131,7 @@ MOVE_STATUS CPawnChessView::CheckWinner(ChessBoard pos)
 	return winStatus;
 }
 
-CPawnChessDoc* CPawnChessView::GetDocument() const // non-debug version is inline
-{
-	ASSERT(m_pDocument->IsKindOf(RUNTIME_CLASS(CPawnChessDoc)));
-	return (CPawnChessDoc*)m_pDocument;
-}
-#endif //_DEBUG
+
 
 
 // CPawnChessView message handlers
