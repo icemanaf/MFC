@@ -43,11 +43,11 @@ public:
 	CButton m_btnAnalyze;
 	CStatic m_lblOutput;
 	CEdit m_txtQuery;
-	uint8_t* state;
+	uint8_t* queryModelState;
+	uint8_t* parserModelState;
 	string input;
 	string output;
 	string prompt;
-	
 	LlamaCPPWrapper* lcw;
 	afx_msg void OnTimer(UINT_PTR nIDEvent);
 private:

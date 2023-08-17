@@ -93,7 +93,7 @@ Any current affairs questions should be responded with the word "[QUERY]" the mo
         prompt = R"(
 ### Instruction: An input will be given consisting of a statement and a  question.
 Based on the statement,provide a 2 sentence summarised  answer to the question.
-Your name is Ash.
+Your name is Smart Alec.
 
 ### Input: France (French: [fʁɑ̃s] Listen), officially the French Republic (French: République française [ʁepyblik fʁɑ̃sɛz]),[14] is a country located primarily in Western Europe. It also includes overseas regions and territories in the Americas and the Atlantic, Pacific and Indian Oceans,[XII] giving it one of the largest discontiguous exclusive economic zones in the world.
 Where is France located?
