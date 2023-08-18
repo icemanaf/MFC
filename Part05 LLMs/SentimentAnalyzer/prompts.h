@@ -10,9 +10,8 @@ public:
 	static std::string GetInitialPrompt()
 	{
 		auto prompt = R"(### Instruction: Given an input, categorise it's sentiment into the following values:Positive,Negative,Neutral
-
 Only provide  responses from the above categories.
-​
+
 ### Input: The service took a long time and when the food arrived it was cold.
 ### Response: Negative.
 

@@ -165,6 +165,9 @@ BOOL CSentimentAnalyzerDlg::OnInitDialog()
 
 	MoveWindow(0, 0, 2048, 2000);
 	
+	m_txtQuery.ModifyStyle(NULL, ES_MULTILINE);
+
+	
 	m_lblcpu.SetWindowTextW(_T("Process CPU %"));
 	m_lblMem.SetWindowTextW(_T("Process Ram (GB)"));
 
