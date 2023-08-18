@@ -10,14 +10,14 @@
 #include "SysInfo.h"
 #include <iostream>
 #include <fstream>
+#include "constants.h"
+#include "prompts.h"
+
 using namespace std;
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
-
-
-
 
 
 // CAboutDlg dialog used for App About
@@ -89,30 +89,16 @@ END_MESSAGE_MAP()
 
 void CSentimentAnalyzerDlg::InitializeLLama()
 {
-	string model_path = "D:\\Concepts\\LLM\\llama.cpp\\models\\llama-2-13b-chat.ggmlv3.q4_1.bin";
-	string state_file_path= "D:\\temp\\sentiment_analyzer_state.bin";
+	
 
-	lcw = new LlamaCPPWrapper(model_path);
+	lcw = new LlamaCPPWrapper(MODEL_PATH);
 	int stateSize = lcw->GetStateSize();
 
-	prompt = R"(### Instruction: Given an input, categorise it's sentiment into the following values:Positive,Negative,Neutral
-
-Only provide  responses from the above categories.
-​
-### Input: And in SriLankan lounge they said no space available
-Look some where else and executive lounge i have with my card but they still use insert card option and it got declining still in airport i have to wait till 8 am its on steel bench.
-### Response: Negative.
-
-### Input: Truly one of the worse airports I have ever arrived at. Dirt, Hot, Grumpy Staff (lots of whom are just wondering around doing nothing it seems), unbelievably noisy and these are the good bits! 
-### Response: Negative.
-
-### Input: The food was excellent and the service was second to none.
-### Response: Positive.
-)";
+	prompt = Prompts::GetInitialPrompt();
 
 	//check if state file exists
 
-	ifstream rf(state_file_path, ios::out | ios::binary);
+	ifstream rf(STATE_FILE_PATH, ios::out | ios::binary);
 
 	if (!rf)
 	{
@@ -120,7 +106,7 @@ Look some where else and executive lounge i have with my card but they still use
 
 		state = lcw->SaveState();
 
-		ofstream wf(state_file_path, ios::out | ios::binary);
+		ofstream wf(STATE_FILE_PATH, ios::out | ios::binary);
 		
 		if (!wf)
 		{
@@ -290,7 +276,22 @@ void CSentimentAnalyzerDlg::OnClickedAnalyze()
 
 		lcw->LoadState(state);
 
-		std::thread th([this] { output = lcw->Evaluate(input); });
+		std::thread th([this] {
+			
+			auto  temp = lcw->Evaluate(input);
+
+			auto endTrimPos = temp.find("### Input:");
+
+			if (endTrimPos != std::string::npos) 
+			{
+				output = temp.substr(0, endTrimPos);
+			}
+			else 
+			{
+				output = temp;
+			}
+			
+			});
 
 		th.detach();
 
